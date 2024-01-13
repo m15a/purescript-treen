@@ -1,0 +1,17 @@
+package:
+  name: treen
+  dependencies:
+    - console
+    - effect
+    - partial
+    - prelude
+    - psci-support
+    - spec
+    - strings
+  test:
+    main: Test.Main
+    dependencies: []
+workspace:
+  package_set:
+    registry: 48.0.0
+  extra_packages: {}
