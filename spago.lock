@@ -10,6 +10,7 @@ workspace:
         - psci-support
         - spec
         - strings
+        - tree-rose
       test_dependencies: []
       build_plan:
         - aff
@@ -62,6 +63,7 @@ workspace:
         - strings
         - tailrec
         - transformers
+        - tree-rose
         - tuples
         - type-equality
         - unfoldable
@@ -1103,6 +1105,18 @@ packages:
       - tailrec
       - tuples
       - unfoldable
+  tree-rose:
+    type: registry
+    version: 4.0.2
+    integrity: sha256-Eln+J9jFgkZYJSeuZmqsizkYpr4BmmW2zKzoCoFW+ss=
+    dependencies:
+      - control
+      - foldable-traversable
+      - free
+      - lists
+      - maybe
+      - prelude
+      - tailrec
   tuples:
     type: registry
     version: 7.0.0

@@ -8,6 +8,7 @@ package:
     - psci-support
     - spec
     - strings
+    - tree-rose
   test:
     main: Test.Main
     dependencies: []
