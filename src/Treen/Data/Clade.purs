@@ -16,7 +16,7 @@ import Data.List (fromFoldable) as L
 import Data.List.Types (List(..))
 import Data.Map (Map, keys, lookup, fromFoldableWith) as M
 import Data.Maybe (fromMaybe)
-import Data.Tree (Forest, Tree, drawTree, mkTree) as T
+import Data.Tree (Forest, Tree, mkTree) as T
 import Data.Tuple (Tuple(..))
 import Treen.Data.Lineage (Lineage, head, tail)
 
