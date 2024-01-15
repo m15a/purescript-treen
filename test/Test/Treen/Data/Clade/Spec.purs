@@ -7,7 +7,7 @@ import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Treen.Data.Lineage (fromString)
-import Treen.Util (unwrap)
+import Treen.Util (unwrapJust)
 
 import Treen.Data.Clade
 
@@ -18,9 +18,9 @@ cladeSpec = describe "Treen.Data.Clade" do
     let
       sep = Pattern "."
       ls = L.fromFoldable
-        [ unwrap $ fromString sep "a.b.c"
-        , unwrap $ fromString sep "a.d"
-        , unwrap $ fromString sep "b.d.c"
+        [ unwrapJust $ fromString sep "a.b.c"
+        , unwrapJust $ fromString sep "a.d"
+        , unwrapJust $ fromString sep "b.d.c"
         ]
     length (bundle ls) `shouldEqual` 2
 
@@ -28,12 +28,12 @@ cladeSpec = describe "Treen.Data.Clade" do
     let
       sep = Pattern "/"
       ls = L.fromFoldable
-        [ unwrap $ fromString sep "a/b/c"
-        , unwrap $ fromString sep "a"
-        , unwrap $ fromString sep "a/b/a/b"
-        , unwrap $ fromString sep "a/d/c"
+        [ unwrapJust $ fromString sep "a/b/c"
+        , unwrapJust $ fromString sep "a"
+        , unwrapJust $ fromString sep "a/b/a/b"
+        , unwrapJust $ fromString sep "a/d/c"
         ]
-      c = unwrap $ L.head $ bundle ls
+      c = unwrapJust $ L.head $ bundle ls
       likeThis = "a\n"
               <> "├── b\n"
               <> "│   ├── a\n"

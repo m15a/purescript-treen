@@ -8,9 +8,9 @@ import Data.String.Regex.Flags (global)
 import Data.String.Regex.Unsafe (unsafeRegex)
 import Partial.Unsafe (unsafePartial)
 
--- | Unwrap a `Maybe` data, trusting that it has some content.
-unwrap :: forall a. Maybe a -> a
-unwrap x = unsafePartial $ fromJust x
+-- | unwrapJust a `Maybe` data, trusting that it has some content.
+unwrapJust :: forall a. Maybe a -> a
+unwrapJust x = unsafePartial $ fromJust x
 
 -- | Split a string into lines separated by newline.
 lines :: String -> Array String

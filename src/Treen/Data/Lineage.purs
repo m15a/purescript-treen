@@ -25,7 +25,7 @@ import Data.List.Types (NonEmptyList)
 import Data.Maybe (Maybe(..))
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
-import Treen.Util (unwrap)
+import Treen.Util (unwrapJust)
 
 -- | A lineage is a sequence of descent, aligned from ancestor to descendant.
 -- |
@@ -84,7 +84,7 @@ instance Ord Lineage where
     | otherwise = compare (Lineage (m - 1) xs') (Lineage (n - 1) ys')
         where
         -- As the lengths of xs and ys are known to be larger than 1,
-        -- it's safe to unwrap them.
+        -- it's safe to unwrapJust them.
         xs' = tailOfMoreThanOne xs
         ys' = tailOfMoreThanOne ys
 
@@ -105,4 +105,4 @@ tail (Lineage n xs)
 
 -- | Get the tail of a non-empty list, trusting that it has at least two contents.
 tailOfMoreThanOne :: NonEmptyList ~> NonEmptyList
-tailOfMoreThanOne = unwrap <<< L1.fromList <<< L1.tail
+tailOfMoreThanOne = unwrapJust <<< L1.fromList <<< L1.tail
