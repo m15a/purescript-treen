@@ -13,23 +13,45 @@ import Data.String.Regex (match, replace, split)
 import Data.String.Regex.Flags (global, multiline, noFlags)
 import Data.String.Regex.Unsafe (unsafeRegex)
 
--- | Split a string into lines separated by newline.
-lines :: String -> Array String
-lines = split byNewline
-  where
-  byNewline = unsafeRegex "\r\n|\r|\n" global
+-- | See https://github.com/menelaos/purescript-stringutils/blob/v0.0.12/src/Data/String/Utils.purs#L232-L232
+-- | and http://www.unicode.org/reports/tr18/#RL1.6
+lineBoundary :: String
+lineBoundary = "\r\n|[\n\r\x0085\x2028\x2029]"
 
--- | Remove the first empty line and each line's margin of fixed length.
+-- | Split the string into lines separated by their boundaries.
+-- | The final end of line is ignored if any.
 -- |
--- | Examples:
+-- | Example:
+-- |
+-- | ```purescript
+-- | import Data.String.Util (lines)
+-- |
+-- | lines "A\nB\nC\n"  -- returns ["A", "B", "C"]
+-- | ```
+lines :: String -> Array String
+lines = trimLastEndOfLine >>> split lineBoundary'
+  where
+  lineBoundary' = unsafeRegex lineBoundary global
+
+-- | Remove the last end of line if any.
+trimLastEndOfLine :: String -> String
+trimLastEndOfLine = replace lastEndOfLine removed
+  where
+  lastEndOfLine = unsafeRegex ("(?:" <> lineBoundary <> ")$") noFlags
+  removed = ""
+
+-- | Remove each line's margin, whose length is determined as the minimum
+-- | length of beginning whitespaces in every lines.
+-- | In addition, the first empty line is ignored for convenience.
+-- |
+-- | Example:
 -- |
 -- | ```purescript
 -- | trimMargin
 -- |   """
 -- |   Line 1
--- |   Line 2
--- |   """
--- | -- returns "Line 1\nLine 2\n"
+-- |     Line 2
+-- |   """  -- returns "Line 1\n  Line 2\n"
 -- | ```
 trimMargin :: String -> String
 trimMargin = trimFirstEmptyLine >>> trimMargin'
@@ -38,10 +60,11 @@ trimMargin = trimFirstEmptyLine >>> trimMargin'
     n <- minimumMarginWidth s
     pure $ trimMarginBy n s
 
+-- | Remove the first empty line if any.
 trimFirstEmptyLine :: String -> String
 trimFirstEmptyLine = replace firstEmptyLine removed
   where
-  firstEmptyLine = unsafeRegex "^[ \t]*(?:\r\n|\r|\n)" noFlags
+  firstEmptyLine = unsafeRegex ("^[ \t]*(?:" <> lineBoundary <> ")") noFlags
   removed = ""
 
 minimumMarginWidth :: String -> Maybe Int
@@ -49,7 +72,7 @@ minimumMarginWidth s = do
   matches <- match anyMargin s
   minimum $ A1.mapMaybe (map length) matches
   where
-  anyMargin = unsafeRegex ("^[ \t]+") (global <> multiline)
+  anyMargin = unsafeRegex "^[ \t]+" (global <> multiline)
 
 trimMarginBy :: Int -> String -> String
 trimMarginBy n = replace margin removed
