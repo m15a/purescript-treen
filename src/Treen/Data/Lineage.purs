@@ -10,7 +10,7 @@
 -- | in which the `(root)` is the most ancestor, `a` is its only child,
 -- | `b` is `a`'s child as well as `(root)`'s grand child, and so on.
 module Treen.Data.Lineage
-  ( Lineage(..)
+  ( Lineage
   , fromFoldable
   , fromString
   , head
@@ -18,22 +18,24 @@ module Treen.Data.Lineage
   ) where
 
 import Prelude
-import Data.Array as A
+import Data.Array (fromFoldable) as A
 import Data.Foldable (class Foldable, length)
-import Data.List.NonEmpty (fromFoldable, fromList, head, tail) as L1
+import Data.List.NonEmpty (fromFoldable, head) as L1
+import Data.List.NonEmpty.Util (tailOfMoreThanOne) as L1
 import Data.List.Types (NonEmptyList)
 import Data.Maybe (Maybe(..))
-import Data.Maybe.Util (unwrapJust)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
 
 -- | A lineage is a sequence of descent, aligned from ancestor to descendant.
 -- |
--- | Don't use its bare constructor even if it is exposed.
--- | Use `fromFoldable` or `fromString` instead.
-data Lineage = Lineage Int (NonEmptyList String)
+-- | Use `fromFoldable` or `fromString` to create an instance.
+newtype Lineage = Lineage
+  { size :: Int
+  , nodes :: NonEmptyList String
+  }
 
--- | Make a lineage from a foldable thing that wraps `String`.
+-- | Make a lineage from a foldable that contains `String`.
 -- |
 -- | Example:
 -- |
@@ -44,9 +46,9 @@ data Lineage = Lineage Int (NonEmptyList String)
 -- | ```
 fromFoldable :: forall f. Foldable f => f String -> Maybe (Lineage)
 fromFoldable xs = do
-  let n = length xs
-  descents <- L1.fromFoldable xs
-  pure $ Lineage n descents
+  let size = length xs
+  nodes <- L1.fromFoldable xs
+  pure $ Lineage { size, nodes }
 
 -- | Make a lineage from a string separated by the given separator `sep`.
 -- |
@@ -62,47 +64,45 @@ fromString :: Pattern -> String -> Maybe Lineage
 fromString sep = split sep >>> fromFoldable
 
 instance Eq Lineage where
-  eq (Lineage m xs) (Lineage n ys)
+  eq (Lineage { size: m, nodes: xs }) (Lineage { size: n, nodes: ys })
     | m /= n = false
     | xs == ys = true
     | otherwise = false
 
 instance Ord Lineage where
-  compare (Lineage 1 xs) (Lineage 1 ys)
+  compare (Lineage { size: 1, nodes: xs }) (Lineage { size: 1, nodes: ys })
     | L1.head xs < L1.head ys = LT
     | L1.head xs > L1.head ys = GT
     | otherwise = EQ
-  compare (Lineage 1 xs) (Lineage _ ys)
+  compare (Lineage { size: 1, nodes: xs }) (Lineage { size: _, nodes: ys })
     | L1.head xs > L1.head ys = GT
     | otherwise = LT
-  compare (Lineage _ xs) (Lineage 1 ys)
+  compare (Lineage { size: _, nodes: xs }) (Lineage { size: 1, nodes: ys })
     | L1.head xs < L1.head ys = LT
     | otherwise = GT
-  compare (Lineage m xs) (Lineage n ys)
+  compare (Lineage { size: m, nodes: xs }) (Lineage { size: n, nodes: ys })
     | L1.head xs < L1.head ys = LT
     | L1.head xs > L1.head ys = GT
-    | otherwise = compare (Lineage (m - 1) xs') (Lineage (n - 1) ys')
+    | otherwise =
+        compare (Lineage { size: m - 1, nodes: xs' })
+          (Lineage { size: n - 1, nodes: ys' })
         where
         -- As the lengths of xs and ys are known to be larger than 1,
-        -- it's safe to unwrapJust them.
-        xs' = tailOfMoreThanOne xs
-        ys' = tailOfMoreThanOne ys
+        -- it's safe to do these.
+        xs' = L1.tailOfMoreThanOne xs
+        ys' = L1.tailOfMoreThanOne ys
 
 instance Show Lineage where
-  show (Lineage _ ss) = "(Lineage " <> ss' <> ")"
+  show (Lineage { size: _, nodes: ss }) = "(Lineage " <> ss' <> ")"
     where
     ss' = joinWith " → " $ A.fromFoldable ss
 
 -- | Get the head of the lineage.
 head :: Lineage -> String
-head (Lineage _ xs) = L1.head xs
+head (Lineage { size: _, nodes: xs }) = L1.head xs
 
 -- | Get the tail of the lineage, possibly nothing.
 tail :: Lineage -> Maybe Lineage
-tail (Lineage n xs)
+tail (Lineage { size: n, nodes: xs })
   | n == 1 = Nothing
-  | otherwise = Just (Lineage (n - 1) $ tailOfMoreThanOne xs)
-
--- | Get the tail of a non-empty list, trusting that it has at least two contents.
-tailOfMoreThanOne :: NonEmptyList ~> NonEmptyList
-tailOfMoreThanOne = unwrapJust <<< L1.fromList <<< L1.tail
+  | otherwise = Just (Lineage { size: n - 1, nodes: L1.tailOfMoreThanOne xs })

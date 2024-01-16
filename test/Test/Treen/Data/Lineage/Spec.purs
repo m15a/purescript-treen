@@ -1,7 +1,6 @@
 module Test.Treen.Data.Lineage.Spec where
 
 import Prelude
-import Data.List.NonEmpty as L
 import Data.Maybe (Maybe(..))
 import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
@@ -14,24 +13,48 @@ lineageSpec :: Spec Unit
 lineageSpec = describe "Treen.Data.Lineage" do
 
   it "can be made from non-empty foldable" do
-    let xs = unwrapJust $ L.fromFoldable [ "a", "b" ]
-    fromFoldable [ "a", "b" ] `shouldEqual` Just (Lineage 2 xs)
+    let
+      actual = show $ unwrapJust $ fromFoldable [ "a" ]
+      expected = "(Lineage a)"
+    actual `shouldEqual` expected
 
-  it "can be made from empty foldable" do
+  it "cannot be made from empty foldable" do
     fromFoldable [] `shouldEqual` Nothing
 
   it "can be made from non-empty string" do
-    let xs = unwrapJust $ L.fromFoldable [ "", "a", "b", "c" ]
-    fromString (Pattern "/") "/a/b/c" `shouldEqual` Just (Lineage 4 xs)
+    let
+      actual = show $ unwrapJust $ fromString (Pattern "/") "/a/b/c"
+      expected = "(Lineage  → a → b → c)"
+    actual `shouldEqual` expected
 
   it "can also be made from empty string" do
-    let xs = unwrapJust $ L.fromFoldable [ "" ]
-    fromString (Pattern ".") "" `shouldEqual` Just (Lineage 1 xs)
+    let
+      actual = show $ unwrapJust $ fromString (Pattern ".") ""
+      expected = "(Lineage )"
+    actual `shouldEqual` expected
 
-  it "should compare lineages alphabetically then in depth" do
+  it "compares lineages alphabetically then in depth" do
     let sep = Pattern "/"
     (fromString sep "a/b" < fromString sep "b") `shouldEqual` true
     (fromString sep "a/a" < fromString sep "b") `shouldEqual` true
     (fromString sep "b/a" > fromString sep "b") `shouldEqual` true
     (fromString sep "b/" > fromString sep "b") `shouldEqual` true
     (fromString sep "" < fromString sep "b") `shouldEqual` true
+
+  it "pops its head" do
+    let
+      actual = head $ unwrapJust $ fromFoldable [ "a" ]
+      expected = "a"
+    actual `shouldEqual` expected
+
+  it "pops its tail if any" do
+    let
+      actual = show $ unwrapJust $ tail $ unwrapJust $ fromFoldable [ "a", "b" ]
+      expected = "(Lineage b)"
+    actual `shouldEqual` expected
+
+  it "does not pop anything if not available" do
+    let
+      actual = tail $ unwrapJust $ fromFoldable [ "a" ]
+      expected = Nothing
+    actual `shouldEqual` expected
