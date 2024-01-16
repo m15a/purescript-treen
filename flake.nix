@@ -1,5 +1,5 @@
 {
-  description = "Show any lines as tree-like format.";
+  description = "Print anything as tree-like format.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
