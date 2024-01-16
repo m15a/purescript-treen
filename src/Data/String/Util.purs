@@ -1,23 +1,17 @@
--- | Miscellaneous helper functions.
-module Treen.Util
-  ( unwrapJust
-  , lines
+-- | Miscellaneous helper functions for string manipulation.
+module Data.String.Util
+  ( lines
   , trimMargin
   ) where
 
 import Prelude
-import Data.Foldable (minimum)
 import Data.Array.NonEmpty (mapMaybe) as A1
-import Data.Maybe (Maybe, fromJust, fromMaybe)
-import Data.String (length) as S
+import Data.Foldable (minimum)
+import Data.Maybe (Maybe, fromMaybe)
+import Data.String (length)
 import Data.String.Regex (match, replace, split)
 import Data.String.Regex.Flags (global, multiline, noFlags)
 import Data.String.Regex.Unsafe (unsafeRegex)
-import Partial.Unsafe (unsafePartial)
-
--- | unwrapJust a `Maybe` data, trusting that it has some content.
-unwrapJust :: forall a. Maybe a -> a
-unwrapJust x = unsafePartial $ fromJust x
 
 -- | Split a string into lines separated by newline.
 lines :: String -> Array String
@@ -53,7 +47,7 @@ trimFirstEmptyLine = replace firstEmptyLine removed
 minimumMarginWidth :: String -> Maybe Int
 minimumMarginWidth s = do
   matches <- match anyMargin s
-  minimum $ A1.mapMaybe (map S.length) matches
+  minimum $ A1.mapMaybe (map length) matches
   where
   anyMargin = unsafeRegex ("^[ \t]+") (global <> multiline)
 

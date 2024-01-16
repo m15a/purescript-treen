@@ -1,13 +1,13 @@
-module Test.Treen.Util.Spec where
+module Test.Data.String.Util.Spec where
 
 import Prelude
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Treen.Util
+import Data.String.Util
 
-utilSpec :: Spec Unit
-utilSpec = describe "Treen.Util" do
+stringUtilSpec :: Spec Unit
+stringUtilSpec = describe "Data.String.Util" do
 
   describe "trimMargin" do
 

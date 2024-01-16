@@ -3,28 +3,28 @@ module Test.Treen.Data.Lineage.Spec where
 import Prelude
 import Data.List.NonEmpty as L
 import Data.Maybe (Maybe(..))
+import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Treen.Util (unwrapJust)
 
 import Treen.Data.Lineage
 
 lineageSpec :: Spec Unit
 lineageSpec = describe "Treen.Data.Lineage" do
 
-  it "should be made from non-empty foldable" do
+  it "can be made from non-empty foldable" do
     let xs = unwrapJust $ L.fromFoldable [ "a", "b" ]
     fromFoldable [ "a", "b" ] `shouldEqual` Just (Lineage 2 xs)
 
-  it "should not be made from empty foldable" do
+  it "can be made from empty foldable" do
     fromFoldable [] `shouldEqual` Nothing
 
-  it "should be made from non-empty string" do
+  it "can be made from non-empty string" do
     let xs = unwrapJust $ L.fromFoldable [ "", "a", "b", "c" ]
     fromString (Pattern "/") "/a/b/c" `shouldEqual` Just (Lineage 4 xs)
 
-  it "should also be made from empty string" do
+  it "can also be made from empty string" do
     let xs = unwrapJust $ L.fromFoldable [ "" ]
     fromString (Pattern ".") "" `shouldEqual` Just (Lineage 1 xs)
 

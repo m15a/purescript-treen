@@ -3,11 +3,12 @@ module Test.Treen.Data.Clade.Spec where
 import Prelude
 import Data.Foldable (length)
 import Data.List (fromFoldable, head) as L
+import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
+import Data.String.Util (trimMargin)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Treen.Data.Lineage (fromString)
-import Treen.Util (trimMargin, unwrapJust)
 
 import Treen.Data.Clade
 

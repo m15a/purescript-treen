@@ -23,9 +23,9 @@ import Data.Foldable (class Foldable, length)
 import Data.List.NonEmpty (fromFoldable, fromList, head, tail) as L1
 import Data.List.Types (NonEmptyList)
 import Data.Maybe (Maybe(..))
+import Data.Maybe.Util (unwrapJust)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
-import Treen.Util (unwrapJust)
 
 -- | A lineage is a sequence of descent, aligned from ancestor to descendant.
 -- |
