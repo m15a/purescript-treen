@@ -3,6 +3,8 @@ package:
   dependencies:
     - console
     - effect
+    - node-process
+    - node-streams
     - partial
     - prelude
     - strings
@@ -12,6 +14,8 @@ package:
     dependencies:
       - psci-support
       - spec
+  run:
+    main: Treen.App.Main
 workspace:
   package_set:
     registry: 48.1.0
