@@ -70,7 +70,7 @@ workspace:
         - unsafe-coerce
   package_set:
     address:
-      registry: 48.0.0
+      registry: 48.1.0
     compiler: ">=0.15.14 <0.16.0"
     content:
       abc-parser: 2.0.1
@@ -164,11 +164,11 @@ workspace:
       echarts-simple: 0.0.1
       effect: 4.0.0
       either: 6.1.0
-      elmish: 0.10.0
+      elmish: 0.11.3
       elmish-enzyme: 0.1.1
       elmish-hooks: 0.10.0
-      elmish-html: 0.8.1
-      elmish-testing-library: 0.3.1
+      elmish-html: 0.8.2
+      elmish-testing-library: 0.3.2
       email-validate: 7.0.0
       encoding: 0.0.8
       enums: 6.0.1
