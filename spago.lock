@@ -7,11 +7,11 @@ workspace:
         - effect
         - partial
         - prelude
-        - psci-support
-        - spec
         - strings
         - tree-rose
-      test_dependencies: []
+      test_dependencies:
+        - psci-support
+        - spec
       build_plan:
         - aff
         - ansi
