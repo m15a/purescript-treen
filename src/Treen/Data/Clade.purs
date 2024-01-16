@@ -1,7 +1,6 @@
--- | Implementations of multi-way tree called clade.
+-- | Implementations of multi-way tree called *clade*.
 -- |
--- | NOTE: A clade is a jargon indicating a sub-tree growing from a common ancestor
--- | in a *phylogenetic* tree.
+-- | A clade means a sub-tree growing from a common ancestor in a *phylogenetic* tree.
 module Treen.Data.Clade
   ( Clade
   , bundle
@@ -35,7 +34,7 @@ instance Show Clade where
 -- | or the last one. Used for pretty-printing the tree.
 data NodeType
   = Root
-  | OlderBroSis
+  | OlderChild
   | LastChild
 
 -- | Print a clade way prettier.
@@ -45,29 +44,28 @@ printClade (Clade t) = go t "" Root
   go tree indent nodeType =
     let
       branch = case nodeType of
-        OlderBroSis -> "├── "
+        OlderChild -> "├── "
         LastChild -> "└── "
         _ -> ""
-      nodeName = C.head tree
+      node = C.head tree
       andMore = foldlWithIndex (\i s c -> s <> go c indent' (nodeTypeOf i)) "" children
         where
-        indent' =
-          indent <> case nodeType of
-            OlderBroSis -> "│   "
-            LastChild -> "    "
-            _ -> ""
+        indent' = indent <> case nodeType of
+          OlderChild -> "│   "
+          LastChild -> "    "
+          _ -> ""
         nodeTypeOf i
           | i == n = LastChild
-          | otherwise = OlderBroSis
-        children = C.tail tree
+          | otherwise = OlderChild
         n = length children - 1
+        children = C.tail tree
     in
-      indent <> branch <> nodeName <> "\n" <> andMore
+      indent <> branch <> node <> "\n" <> andMore
 
 -- | Make a list of clades from a list of lineages.
 -- |
 -- | The number of clades depends on the number of roots found in the lineages.
--- | For example, the lineages below contain two roots `a` and `b`, denoted by `^`,
+-- | For example, the lineages below contain two roots `a` and `b`, indicated by `^`,
 -- |
 -- |     a → b → d
 -- |     ^
