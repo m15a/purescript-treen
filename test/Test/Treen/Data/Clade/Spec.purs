@@ -7,7 +7,7 @@ import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Treen.Data.Lineage (fromString)
-import Treen.Util (unwrapJust)
+import Treen.Util (trimMargin, unwrapJust)
 
 import Treen.Data.Clade
 
@@ -34,11 +34,14 @@ cladeSpec = describe "Treen.Data.Clade" do
         , unwrapJust $ fromString sep "a/d/c"
         ]
       c = unwrapJust $ L.head $ bundle ls
-      likeThis = "a\n"
-              <> "├── b\n"
-              <> "│   ├── a\n"
-              <> "│   │   └── b\n"
-              <> "│   └── c\n"
-              <> "└── d\n"
-              <> "    └── c\n"
+      likeThis = trimMargin
+        """
+        a
+        ├── b
+        │   ├── a
+        │   │   └── b
+        │   └── c
+        └── d
+            └── c
+        """
     printClade c `shouldEqual` likeThis
