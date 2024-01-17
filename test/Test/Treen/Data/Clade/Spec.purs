@@ -15,7 +15,7 @@ import Treen.Data.Clade
 cladeSpec :: Spec Unit
 cladeSpec = describe "Treen.Data.Clade" do
 
-  it "should bundle lineages having multiple roots into multiple clades" do
+  it "bundles lineages having multiple roots into multiple clades" do
     let
       sep = Pattern "."
       ls = L.fromFoldable
@@ -25,7 +25,7 @@ cladeSpec = describe "Treen.Data.Clade" do
         ]
     length (bundle ls) `shouldEqual` 2
 
-  it "should be printed like this" do
+  it "is printed like this" do
     let
       sep = Pattern "/"
       ls = L.fromFoldable
