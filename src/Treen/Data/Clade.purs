@@ -9,10 +9,11 @@ module Treen.Data.Clade
 
 import Prelude
 import Control.Comonad.Cofree (head, tail) as C
-import Data.Foldable (length)
+import Data.Array (fromFoldable) as A
+import Data.Foldable (class Foldable, length)
 import Data.FoldableWithIndex (foldlWithIndex)
 import Data.List (fromFoldable) as L
-import Data.List.Types (List(..))
+import Data.List.Types (List)
 import Data.Map (Map, keys, lookup, fromFoldableWith) as M
 import Data.Maybe (fromMaybe)
 import Data.String.Util (trimLastEndOfLine)
@@ -81,21 +82,20 @@ printClade (Clade t) = trimLastEndOfLine $ go t "" Root
 -- |     ^   └───e
 -- |     b───c
 -- |     ^
-bundle :: List Lineage -> List Clade
-bundle = bundle' >>> map Clade
+bundle :: forall f. Foldable f => f Lineage -> List Clade
+bundle = A.fromFoldable >>> bundle' >>> map Clade
 
 -- | Make a `Forest`, i.e., a list of trees, from a list of lineages.
-bundle' :: List Lineage -> T.Forest String
+bundle' :: Array Lineage -> T.Forest String
 bundle' lineages = map (\n -> T.mkTree n (childrenOf n)) roots
   where
   classification = classify lineages
   roots = classification # M.keys # L.fromFoldable
   childrenOf = lineagesOf >>> bundle'
-  lineagesOf node = classification # M.lookup node # fromMaybe Nil
+  lineagesOf node = classification # M.lookup node # fromMaybe []
 
 -- | Classify lineages by their roots, i.e., head nodes.
-classify :: List Lineage -> M.Map String (List Lineage)
-classify lineages =
-  lineages
-    # map (\l -> Tuple (head l) (L.fromFoldable $ tail l))
-    # M.fromFoldableWith (<>)
+classify :: Array Lineage -> M.Map String (Array Lineage)
+classify = map toPair >>> M.fromFoldableWith (<>)
+  where
+  toPair l = Tuple (head l) (A.fromFoldable $ tail l)

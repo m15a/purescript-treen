@@ -2,7 +2,7 @@ module Test.Treen.Data.Clade.Spec where
 
 import Prelude
 import Data.Foldable (length)
-import Data.List (fromFoldable, head) as L
+import Data.List (head) as L
 import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
 import Data.String.Util (trimMargin)
@@ -18,7 +18,7 @@ cladeSpec = describe "Treen.Data.Clade" do
   it "bundles lineages having multiple roots into multiple clades" do
     let
       mkL = fromString (Pattern ".") >>> unwrapJust
-      ls = L.fromFoldable
+      ls =
         [ mkL "a.b.c"
         , mkL "a.d"
         , mkL "b.d.c"
@@ -28,7 +28,7 @@ cladeSpec = describe "Treen.Data.Clade" do
   it "is printed like this" do
     let
       mkL = fromString (Pattern "/") >>> unwrapJust
-      ls = L.fromFoldable
+      ls =
         [ mkL "a/b/c"
         , mkL "a"
         , mkL "a/b/a/b"
@@ -47,13 +47,14 @@ cladeSpec = describe "Treen.Data.Clade" do
     printClade c `shouldEqual` likeThis
 
   it "compares clades alphabetically then in depth" do
-    let mkL = fromString (Pattern "/") >>> unwrapJust
-        mkC = map mkL >>> L.fromFoldable >>> bundle >>> L.head >>> unwrapJust
-        c1 = mkC ["a"]
-        c2 = mkC ["b"]
-        c3 = mkC ["a/a", "a/c"]
-        c4 = mkC ["b/a"]
-        c5 = mkC ["b/", "b"]
+    let
+      mkL = fromString (Pattern "/") >>> unwrapJust
+      mkC = map mkL >>> bundle >>> L.head >>> unwrapJust
+      c1 = mkC [ "a" ]
+      c2 = mkC [ "b" ]
+      c3 = mkC [ "a/a", "a/c" ]
+      c4 = mkC [ "b/a" ]
+      c5 = mkC [ "b/", "b" ]
     (c1 < c2) `shouldEqual` true
     (c3 < c2) `shouldEqual` true
     (c4 > c2) `shouldEqual` true
