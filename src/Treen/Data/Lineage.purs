@@ -18,12 +18,12 @@ module Treen.Data.Lineage
   ) where
 
 import Prelude
-import Data.Array (fromFoldable) as A
+import Data.Array (fromFoldable, init, last) as A
 import Data.Foldable (class Foldable, length)
 import Data.List.NonEmpty (fromFoldable, head) as L1
 import Data.List.NonEmpty.Util (tailOfMoreThanOne) as L1
 import Data.List.Types (NonEmptyList)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
 
@@ -61,7 +61,12 @@ fromFoldable xs = do
 -- | fromString (Pattern ".") "a.b.c"
 -- | ```
 fromString :: Pattern -> String -> Maybe Lineage
-fromString sep = split sep >>> fromFoldable
+fromString sep = split sep >>> trimLastEmpty >>> fromFoldable
+  where
+  trimLastEmpty a = fromMaybe [] do
+    x <- A.last a
+    if x == "" then A.init a
+    else pure a
 
 instance Eq Lineage where
   eq (Lineage { size: m, nodes: xs }) (Lineage { size: n, nodes: ys })

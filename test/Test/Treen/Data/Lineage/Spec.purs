@@ -27,19 +27,24 @@ lineageSpec = describe "Treen.Data.Lineage" do
       expected = "(Lineage  → a → b → c)"
     actual `shouldEqual` expected
 
-  it "can also be made from empty string" do
+  it "ignores the last separator" do
     let
-      actual = show $ unwrapJust $ fromString (Pattern ".") ""
-      expected = "(Lineage )"
+      actual = show $ unwrapJust $ fromString (Pattern "/") "a/"
+      expected = "(Lineage a)"
+    actual `shouldEqual` expected
+
+  it "cannot be made from empty string" do
+    let
+      actual = fromString (Pattern ".") ""
+      expected = Nothing
     actual `shouldEqual` expected
 
   it "compares lineages alphabetically then in depth" do
     let sep = Pattern "/"
-    (fromString sep "a/b" < fromString sep "b") `shouldEqual` true
+    (fromString sep "a" < fromString sep "b") `shouldEqual` true
     (fromString sep "a/a" < fromString sep "b") `shouldEqual` true
     (fromString sep "b/a" > fromString sep "b") `shouldEqual` true
-    (fromString sep "b/" > fromString sep "b") `shouldEqual` true
-    (fromString sep "" < fromString sep "b") `shouldEqual` true
+    (fromString sep "b/" == fromString sep "b") `shouldEqual` true
 
   it "pops its head" do
     let
