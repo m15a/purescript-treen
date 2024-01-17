@@ -24,6 +24,11 @@ cladeSpec = describe "Treen.Data.Clade" do
         ]
     length (bundle ls) `shouldEqual` 2
 
+  it "can be created from a single lineage" do
+    let
+      mkL = fromString (Pattern ".") >>> unwrapJust
+    (show $ plant $ mkL "a.b.c") `shouldEqual` "(Clade a\n└── b\n    └── c)"
+
   it "is printed like this" do
     let
       mkL = fromString (Pattern "/") >>> unwrapJust

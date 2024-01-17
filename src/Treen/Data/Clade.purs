@@ -4,6 +4,7 @@
 module Treen.Data.Clade
   ( Clade
   , bundle
+  , plant
   , printClade
   ) where
 
@@ -101,3 +102,14 @@ classify :: Array Lineage -> Map String (Array Lineage)
 classify = map toPair >>> M.fromFoldableWith (<>)
   where
   toPair l = Tuple (head l) (A.fromFoldable $ tail l)
+
+-- | Make a single clade from a single lineage.
+plant :: Lineage -> Clade
+plant = plant' >>> Clade
+
+-- | Make a `Tree` from a lineage.
+plant' :: Lineage -> Tree String
+plant' lineage = mkTree root children
+  where
+  root = head lineage
+  children = tail lineage # A.fromFoldable # bundle'
