@@ -29,6 +29,13 @@ stringUtilSpec = describe "Data.String.Util" do
         expected = [ "A" ]
       actual `shouldEqual` expected
 
+  describe "trimLastEndOfLine" do
+    it "removes the last end of line" do
+      let
+        actual = trimLastEndOfLine "A\r\n\n"
+        expected = "A\r\n"
+      actual `shouldEqual` expected
+
   describe "trimMargin" do
 
     it "removes the first empty line" do

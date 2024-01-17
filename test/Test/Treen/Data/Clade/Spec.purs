@@ -43,6 +43,5 @@ cladeSpec = describe "Treen.Data.Clade" do
         │   │   └── b
         │   └── c
         └── d
-            └── c
-        """
+            └── c"""
     printClade c `shouldEqual` likeThis

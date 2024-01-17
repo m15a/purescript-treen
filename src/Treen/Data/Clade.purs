@@ -8,13 +8,14 @@ module Treen.Data.Clade
   ) where
 
 import Prelude
+import Control.Comonad.Cofree (head, tail) as C
 import Data.Foldable (length)
 import Data.FoldableWithIndex (foldlWithIndex)
-import Control.Comonad.Cofree (head, tail) as C
 import Data.List (fromFoldable) as L
 import Data.List.Types (List(..))
 import Data.Map (Map, keys, lookup, fromFoldableWith) as M
 import Data.Maybe (fromMaybe)
+import Data.String.Util (trimLastEndOfLine)
 import Data.Tree (Forest, Tree, mkTree) as T
 import Data.Tuple (Tuple(..))
 import Treen.Data.Lineage (Lineage, head, tail)
@@ -39,7 +40,7 @@ data NodeType
 
 -- | Print a clade way prettier.
 printClade :: Clade -> String
-printClade (Clade t) = go t "" Root
+printClade (Clade t) = trimLastEndOfLine $ go t "" Root
   where
   go tree indent nodeType =
     let

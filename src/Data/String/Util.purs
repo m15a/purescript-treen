@@ -1,6 +1,7 @@
 -- | Miscellaneous helper functions for string manipulation.
 module Data.String.Util
   ( lines
+  , trimLastEndOfLine
   , trimMargin
   ) where
 
