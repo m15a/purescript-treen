@@ -45,3 +45,16 @@ cladeSpec = describe "Treen.Data.Clade" do
         └── d
             └── c"""
     printClade c `shouldEqual` likeThis
+
+  it "compares clades alphabetically then in depth" do
+    let mkL = fromString (Pattern "/") >>> unwrapJust
+        mkC = map mkL >>> L.fromFoldable >>> bundle >>> L.head >>> unwrapJust
+        c1 = mkC ["a"]
+        c2 = mkC ["b"]
+        c3 = mkC ["a/a", "a/c"]
+        c4 = mkC ["b/a"]
+        c5 = mkC ["b/", "b"]
+    (c1 < c2) `shouldEqual` true
+    (c3 < c2) `shouldEqual` true
+    (c4 > c2) `shouldEqual` true
+    (c5 == c2) `shouldEqual` true
