@@ -1,8 +1,7 @@
 module Test.Treen.Data.Clade.Spec where
 
 import Prelude
-import Data.Foldable (length)
-import Data.List (head) as L
+import Data.Foldable (length, minimum)
 import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
 import Data.String.Util (trimMargin)
@@ -34,7 +33,7 @@ cladeSpec = describe "Treen.Data.Clade" do
         , mkL "a/b/a/b"
         , mkL "a/d/c"
         ]
-      c = unwrapJust $ L.head $ bundle ls
+      c = unwrapJust $ minimum $ bundle ls
       likeThis = trimMargin
         """
         a
@@ -49,7 +48,7 @@ cladeSpec = describe "Treen.Data.Clade" do
   it "compares clades alphabetically then in depth" do
     let
       mkL = fromString (Pattern "/") >>> unwrapJust
-      mkC = map mkL >>> bundle >>> L.head >>> unwrapJust
+      mkC = map mkL >>> bundle >>> minimum >>> unwrapJust
       c1 = mkC [ "a" ]
       c2 = mkC [ "b" ]
       c3 = mkC [ "a/a", "a/c" ]
