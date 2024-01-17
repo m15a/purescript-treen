@@ -40,26 +40,29 @@ lineageSpec = describe "Treen.Data.Lineage" do
     actual `shouldEqual` expected
 
   it "compares lineages alphabetically then in depth" do
-    let sep = Pattern "/"
-    (fromString sep "a" < fromString sep "b") `shouldEqual` true
-    (fromString sep "a/a" < fromString sep "b") `shouldEqual` true
-    (fromString sep "b/a" > fromString sep "b") `shouldEqual` true
-    (fromString sep "b/" == fromString sep "b") `shouldEqual` true
+    let mkL = fromString (Pattern "/") >>> unwrapJust
+    (mkL "a" < mkL "b") `shouldEqual` true
+    (mkL "a/a" < mkL "b") `shouldEqual` true
+    (mkL "b/a" > mkL "b") `shouldEqual` true
+    (mkL "b/" == mkL "b") `shouldEqual` true
 
   it "pops its head" do
     let
-      actual = head $ unwrapJust $ fromFoldable [ "a" ]
+      mkL = fromFoldable >>> unwrapJust
+      actual = head $ mkL [ "a" ]
       expected = "a"
     actual `shouldEqual` expected
 
   it "pops its tail if any" do
     let
-      actual = show $ unwrapJust $ tail $ unwrapJust $ fromFoldable [ "a", "b" ]
-      expected = "(Lineage b)"
+      mkL = fromFoldable >>> unwrapJust
+      actual = show $ tail $ mkL [ "a", "b" ]
+      expected = "(Just (Lineage b))"
     actual `shouldEqual` expected
 
   it "does not pop anything if not available" do
     let
-      actual = tail $ unwrapJust $ fromFoldable [ "a" ]
+      mkL = fromFoldable >>> unwrapJust
+      actual = tail $ mkL [ "a" ]
       expected = Nothing
     actual `shouldEqual` expected

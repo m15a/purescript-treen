@@ -17,22 +17,22 @@ cladeSpec = describe "Treen.Data.Clade" do
 
   it "bundles lineages having multiple roots into multiple clades" do
     let
-      sep = Pattern "."
+      mkL = fromString (Pattern ".") >>> unwrapJust
       ls = L.fromFoldable
-        [ unwrapJust $ fromString sep "a.b.c"
-        , unwrapJust $ fromString sep "a.d"
-        , unwrapJust $ fromString sep "b.d.c"
+        [ mkL "a.b.c"
+        , mkL "a.d"
+        , mkL "b.d.c"
         ]
     length (bundle ls) `shouldEqual` 2
 
   it "is printed like this" do
     let
-      sep = Pattern "/"
+      mkL = fromString (Pattern "/") >>> unwrapJust
       ls = L.fromFoldable
-        [ unwrapJust $ fromString sep "a/b/c"
-        , unwrapJust $ fromString sep "a"
-        , unwrapJust $ fromString sep "a/b/a/b"
-        , unwrapJust $ fromString sep "a/d/c"
+        [ mkL "a/b/c"
+        , mkL "a"
+        , mkL "a/b/a/b"
+        , mkL "a/d/c"
         ]
       c = unwrapJust $ L.head $ bundle ls
       likeThis = trimMargin
