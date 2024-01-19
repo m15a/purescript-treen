@@ -1,7 +1,15 @@
+# Dependencies
+.psci_modules/
+.spago
+bower_components/
+node_modules/
+
+# Generated files
+.psci
+output/
+generated-docs/
+
+# Development tools
 .direnv/
 .envrc
-.psci_modules/
 .purs-repl
-.spago/
-generated-docs/
-output/
