@@ -48,6 +48,8 @@ trimLastEndOfLine = replace lastEndOfLine removed
 -- | Example:
 -- |
 -- | ```purescript
+-- | import Treen.Util.Data.String (trimMargin)
+-- |
 -- | trimMargin
 -- |   """
 -- |   Line 1

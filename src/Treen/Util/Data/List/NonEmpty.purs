@@ -8,6 +8,6 @@ import Data.List.NonEmpty (fromList, tail)
 import Data.List.Types (NonEmptyList)
 import Treen.Util.Data.Maybe (unwrapJust)
 
--- | Get the tail of a non-empty list, trusting that it has at least two contents.
+-- | Get the tail of a non-empty list, trusting that it has at least two items.
 tailOfMoreThanOne :: NonEmptyList ~> NonEmptyList
 tailOfMoreThanOne = unwrapJust <<< fromList <<< tail
