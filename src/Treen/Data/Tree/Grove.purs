@@ -35,11 +35,13 @@ module Treen.Data.Tree.Grove
   ) where
 
 import Prelude
+import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldr)
 import Data.FoldableWithIndex (foldlWithIndex, foldrWithIndex)
 import Data.Map (Map)
-import Data.Map (empty, member, insert, insertWith, singleton, size, toUnfoldable) as M
+import Data.Map (empty, insertWith, singleton, size, toUnfoldable) as M
 import Data.Maybe (Maybe(..))
+import Data.Ord (class Ord1)
 import Data.String (joinWith) as S
 import Data.String.Util (trimLastEndOfLine) as S
 import Data.Tuple (Tuple(..))
@@ -52,8 +54,12 @@ newtype Grove a = Grove (Map a (Grove a))
 instance Eq a => Eq (Grove a) where
   eq (Grove x) (Grove y) = eq x y
 
+derive instance Eq1 Grove
+
 instance Ord a => Ord (Grove a) where
   compare (Grove x) (Grove y) = compare x y
+
+derive instance Ord1 Grove
 
 instance Show a => Show (Grove a) where
   show (Grove g) = "(Grove " <> show g <> ")"
@@ -134,12 +140,16 @@ insert edge child (Grove grove) = Grove $ M.insertWith merge edge child grove
 merge :: forall a. Ord a => Grove a -> Grove a -> Grove a
 merge old (Grove new) = foldrWithIndex insert old new
 
+-- | Merging groves forms a semigroup.
 instance Ord a => Semigroup (Grove a) where
   append = merge
 
 -- | Make an empty grove.
 empty :: forall a. Grove a
 empty = Grove M.empty
+
+instance Ord a => Monoid (Grove a) where
+  mempty = empty
 
 -- | Make a grove with a single edge directed to the given grove.
 cons :: forall a. a -> Grove a -> Grove a
