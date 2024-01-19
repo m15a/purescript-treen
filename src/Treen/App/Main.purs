@@ -4,13 +4,13 @@ import Prelude
 import Data.Foldable (for_)
 import Data.List (fromFoldable, mapMaybe) as L
 import Data.String.Pattern (Pattern(..))
-import Data.String.Util (lines)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Node.Process (stdin, stdout)
 import Node.Stream.Aff (fromStringUTF8, toStringUTF8, readAll, write)
 import Treen.Data.Clade (bundle, printClade)
 import Treen.Data.Lineage (fromString)
+import Treen.Util.Data.String (lines)
 
 main :: Effect Unit
 main = launchAff_ do

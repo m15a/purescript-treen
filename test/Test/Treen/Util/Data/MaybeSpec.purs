@@ -1,11 +1,11 @@
-module Test.Data.Maybe.Util.Spec where
+module Test.Treen.Util.Data.MaybeSpec (maybeUtilSpec) where
 
 import Prelude
 import Data.Maybe (Maybe(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Data.Maybe.Util
+import Treen.Util.Data.Maybe
 
 maybeUtilSpec :: Spec Unit
 maybeUtilSpec = describe "Data.Maybe.Util" do

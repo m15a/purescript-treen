@@ -43,8 +43,8 @@ import Data.Map (empty, insertWith, singleton, size, toUnfoldable) as M
 import Data.Maybe (Maybe(..))
 import Data.Ord (class Ord1)
 import Data.String (joinWith) as S
-import Data.String.Util (trimLastEndOfLine) as S
 import Data.Tuple (Tuple(..))
+import Treen.Util.Data.String (trimLastEndOfLine) as S
 
 -- | Edge-named multi-way tree.
 -- |

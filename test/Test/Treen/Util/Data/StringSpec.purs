@@ -1,10 +1,10 @@
-module Test.Data.String.Util.Spec where
+module Test.Treen.Util.Data.StringSpec (stringUtilSpec) where
 
 import Prelude
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Data.String.Util
+import Treen.Util.Data.String
 
 stringUtilSpec :: Spec Unit
 stringUtilSpec = describe "Data.String.Util" do

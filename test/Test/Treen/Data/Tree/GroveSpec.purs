@@ -1,11 +1,11 @@
-module Test.Treen.Data.Tree.Grove.Spec (groveSpec) where
+module Test.Treen.Data.Tree.GroveSpec (groveSpec) where
 
 import Prelude
 import Data.Foldable (class Foldable, foldl)
-import Data.Maybe.Util (unwrapJust)
-import Data.String.Util (trimMargin)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
+import Treen.Util.Data.Maybe (unwrapJust)
+import Treen.Util.Data.String (trimMargin)
 
 import Treen.Data.Tree.Grove
 

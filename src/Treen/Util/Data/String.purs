@@ -1,5 +1,5 @@
 -- | Miscellaneous helper functions for string manipulation.
-module Data.String.Util
+module Treen.Util.Data.String
   ( lines
   , trimLastEndOfLine
   , trimMargin
@@ -25,7 +25,7 @@ lineBoundary = "\r\n|[\n\r\x0085\x2028\x2029]"
 -- | Example:
 -- |
 -- | ```purescript
--- | import Data.String.Util (lines)
+-- | import Treen.Util.Data.String (lines)
 -- |
 -- | lines "A\nB\nC\n"  -- returns ["A", "B", "C"]
 -- | ```

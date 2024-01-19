@@ -1,13 +1,13 @@
-module Test.Treen.Data.Clade.Spec where
+module Test.Treen.Data.CladeSpec (cladeSpec) where
 
 import Prelude
 import Data.Foldable (length, minimum)
-import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
-import Data.String.Util (trimMargin)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Treen.Data.Lineage (fromString)
+import Treen.Util.Data.Maybe (unwrapJust)
+import Treen.Util.Data.String (trimMargin)
 
 import Treen.Data.Clade
 

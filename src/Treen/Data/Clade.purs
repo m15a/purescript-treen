@@ -19,10 +19,10 @@ import Data.Map (keys, lookup, fromFoldableWith) as M
 import Data.Maybe (fromMaybe)
 import Data.Set (Set)
 import Data.Set (fromFoldable) as S
-import Data.String.Util (trimLastEndOfLine)
 import Data.Tree (Forest, Tree, mkTree)
 import Data.Tuple (Tuple(..))
 import Treen.Data.Lineage (Lineage, head, tail)
+import Treen.Util.Data.String (trimLastEndOfLine)
 
 -- | It is just a wrapper of `Data.Tree (Tree)`, implemented in package
 -- | [`purescript-tree-rose`](https://pursuit.purescript.org/packages/purescript-tree-rose/).

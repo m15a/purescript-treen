@@ -1,5 +1,5 @@
 -- | Miscellaneous helper functions for `Maybe` type manipulation.
-module Data.Maybe.Util
+module Treen.Util.Data.Maybe
   ( unwrapJust
   ) where
 

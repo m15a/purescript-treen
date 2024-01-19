@@ -1,12 +1,12 @@
-module Test.Data.List.NonEmpty.Util.Spec where
+module Test.Treen.Util.Data.List.NonEmptySpec (nonemplistUtilSpec) where
 
 import Prelude
 import Data.List.NonEmpty (fromFoldable) as L1
-import Data.Maybe.Util (unwrapJust)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
+import Treen.Util.Data.Maybe (unwrapJust)
 
-import Data.List.NonEmpty.Util
+import Treen.Util.Data.List.NonEmpty
 
 nonemplistUtilSpec :: Spec Unit
 nonemplistUtilSpec = describe "Data.List.NonEmpty.Util" do

@@ -1,11 +1,11 @@
-module Test.Treen.Data.Lineage.Spec where
+module Test.Treen.Data.LineageSpec (lineageSpec) where
 
 import Prelude
 import Data.Maybe (Maybe(..))
-import Data.Maybe.Util (unwrapJust)
 import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
+import Treen.Util.Data.Maybe (unwrapJust)
 
 import Treen.Data.Lineage
 
