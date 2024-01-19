@@ -1,6 +1,4 @@
--- | Implementation of a multi-way tree with edge names.
--- |
--- | Note that edges growing from the same node cannot have identical names.
+-- | A multi-way tree with named edges, non-named nodes, and no node/edge values.
 -- |
 -- | An example shown below, where `∘` represents a node and `─x─` represents
 -- | an edge named `x`.
@@ -23,14 +21,18 @@
 -- |     ├───D ...
 -- |     └───E ...
 -- | ```
-module Treen.Data.Tree.Grove
-  ( Grove
+-- |
+-- | Doesn't it look like a grove?
+-- |
+-- | NOTE: Muptiple edges branching from the same node cannot have the same name.
+module Treen.Data.Grove
+  ( Grove(..)
   , cons
   , empty
   , fromFoldable
   , insert
   , merge
-  , printGrove
+  , print
   , singleton
   ) where
 
@@ -46,9 +48,6 @@ import Data.String (joinWith) as S
 import Data.Tuple (Tuple(..))
 import Treen.Util.Data.String (trimLastEndOfLine) as S
 
--- | Edge-named multi-way tree.
--- |
--- | It is just a mapping from names of edges to corresponding child nodes.
 newtype Grove a = Grove (Map a (Grove a))
 
 instance Eq a => Eq (Grove a) where
@@ -62,14 +61,13 @@ instance Ord a => Ord (Grove a) where
 derive instance Ord1 Grove
 
 instance Show a => Show (Grove a) where
-  show (Grove g) = "(Grove " <> show g <> ")"
+  show (Grove m) = "(Grove " <> show m <> ")"
 
 -- | Print a grove, interpreted as node-named trees.
-printGrove :: forall a. Show a => Ord a => Grove a -> String
-printGrove (Grove grove) =
-  grove
-    # M.toUnfoldable
-    # map printTree
+print :: forall a. Show a => Ord a => Grove a -> String
+print (Grove m) =
+  m # M.toUnfoldable
+    # map print'
     # S.joinWith "\n"
 
 -- | A node in a tree is either root, older sibling, or the last child.
@@ -79,10 +77,11 @@ data NodeType
   | OlderChild
   | LastChild
 
-printTree :: forall a. Show a => Ord a => Tuple a (Grove a) -> String
-printTree = go Root "" >>> S.trimLastEndOfLine
+-- | Print a tree in a grove, interpreted as node-named.
+print' :: forall a. Show a => Ord a => Tuple a (Grove a) -> String
+print' = go Root "" >>> S.trimLastEndOfLine
   where
-  go nodeType header (Tuple node (Grove children)) =
+  go nodeType header (Tuple nodeName (Grove children)) =
     let
       branch = case nodeType of
         OlderChild -> "├── "
@@ -101,7 +100,7 @@ printTree = go Root "" >>> S.trimLastEndOfLine
         n = M.size children - 1
         children' = M.toUnfoldable children :: Array _
     in
-      header <> branch <> show node <> "\n" <> andMore
+      header <> branch <> show nodeName <> "\n" <> andMore
 
 -- | Insert an edge directed to a child grove into another target grove.
 -- |
@@ -115,7 +114,7 @@ printTree = go Root "" >>> S.trimLastEndOfLine
 -- |   └─B─∘
 -- | ```
 -- |
--- | into a target grove that already has an edge named `A`
+-- | into a target grove that already has an edge `A`
 -- |
 -- | ```
 -- | ∘─A─∘
@@ -136,11 +135,11 @@ insert edge child (Grove grove) = Grove $ M.insertWith merge edge child grove
 
 -- | Merge two groves into a single grove.
 -- |
--- | Simply inserts every edges of a grove one by one into another grove.
+-- | It `insert`s every edges in a grove one by one into another grove.
 merge :: forall a. Ord a => Grove a -> Grove a -> Grove a
 merge old (Grove new) = foldrWithIndex insert old new
 
--- | Merging groves forms a semigroup.
+-- | Merging two groves makes another grove, yielding a semigroup algebra.
 instance Ord a => Semigroup (Grove a) where
   append = merge
 
@@ -159,7 +158,7 @@ cons edge grove = Grove $ M.singleton edge grove
 singleton :: forall a. a -> Grove a
 singleton edge = cons edge empty
 
--- | Make a grove that contains a linear chain of edges from a foldable.
+-- | Make a grove from a foldable, containing a sequence of edges.
 -- |
 -- | For example, `fromFoldable [1, 2, 3]` produces a linear grove:
 -- |
@@ -169,8 +168,7 @@ singleton edge = cons edge empty
 -- |         └─3─∘
 -- | ```
 fromFoldable :: forall f a. Foldable f => f a -> Maybe (Grove a)
-fromFoldable xs = do
-  foldr step Nothing xs
+fromFoldable xs = foldr step Nothing xs
   where
   step x Nothing = Just (singleton x)
   step x (Just g) = Just (cons x g)

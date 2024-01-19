@@ -1,4 +1,4 @@
-module Test.Treen.Util.Data.List.NonEmptySpec (nonemplistUtilSpec) where
+module Test.Treen.Util.Data.List.NonEmptySpec (nonEmptyListUtilSpec) where
 
 import Prelude
 import Data.List.NonEmpty (fromFoldable) as L1
@@ -8,12 +8,12 @@ import Treen.Util.Data.Maybe (unwrapJust)
 
 import Treen.Util.Data.List.NonEmpty
 
-nonemplistUtilSpec :: Spec Unit
-nonemplistUtilSpec = describe "Data.List.NonEmpty.Util" do
+nonEmptyListUtilSpec :: Spec Unit
+nonEmptyListUtilSpec = describe "Treen.Util.Data.List.NonEmpty" do
 
   describe "tailOfMoreThanOne" do
 
-    it "gets the tail of non-empty list of more-than-one length" do
+    it "gets the tail of non-empty list having >=2 items" do
       let
         xs = unwrapJust $ L1.fromFoldable [ "a", "b" ]
         actual = tailOfMoreThanOne xs

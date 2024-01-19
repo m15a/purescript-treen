@@ -7,7 +7,7 @@ import Test.Spec.Assertions (shouldEqual)
 import Treen.Util.Data.String
 
 stringUtilSpec :: Spec Unit
-stringUtilSpec = describe "Data.String.Util" do
+stringUtilSpec = describe "Treen.Util.Data.String" do
 
   describe "lines" do
     it "splits string by their line boundaries" do
@@ -32,8 +32,8 @@ stringUtilSpec = describe "Data.String.Util" do
   describe "trimLastEndOfLine" do
     it "removes the last end of line" do
       let
-        actual = trimLastEndOfLine "A\r\n\n"
-        expected = "A\r\n"
+        actual = trimLastEndOfLine "A\n\r\n"
+        expected = "A\n"
       actual `shouldEqual` expected
 
   describe "trimMargin" do

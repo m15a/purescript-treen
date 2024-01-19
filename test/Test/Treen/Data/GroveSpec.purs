@@ -1,4 +1,4 @@
-module Test.Treen.Data.Tree.GroveSpec (groveSpec) where
+module Test.Treen.Data.GroveSpec (groveSpec) where
 
 import Prelude
 import Data.Foldable (class Foldable, foldl)
@@ -7,16 +7,16 @@ import Test.Spec.Assertions (shouldEqual)
 import Treen.Util.Data.Maybe (unwrapJust)
 import Treen.Util.Data.String (trimMargin)
 
-import Treen.Data.Tree.Grove
+import Treen.Data.Grove
 
 mkG :: forall f a. Foldable f => f a -> Grove a
 mkG = fromFoldable >>> unwrapJust
 
 groveSpec :: Spec Unit
-groveSpec = describe "Treen.Data.Tree.Grove" do
+groveSpec = describe "Treen.Data.Grove" do
 
   it "can be created from a foldable" do
-    (printGrove $ mkG [ 1, 2, 3 ]) `shouldEqual` "1\n└── 2\n    └── 3"
+    (print $ mkG [ 1, 2, 3 ]) `shouldEqual` "1\n└── 2\n    └── 3"
 
   it "can be merged with the other groves" do
     let
@@ -35,7 +35,7 @@ groveSpec = describe "Treen.Data.Tree.Grove" do
         │   └── "c"
         └── "d"
             └── "c""""
-    printGrove g `shouldEqual` likeThis
+    print g `shouldEqual` likeThis
 
   it "compares groves alphabetically then in depth" do
     let

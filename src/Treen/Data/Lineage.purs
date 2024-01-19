@@ -1,33 +1,33 @@
--- | Implementations of lineage.
+-- | Lineage represents a sequence of direction from ancestor to descendant.
 -- |
--- | A lineage represents a sequence of decent from ancestor to descendant.
--- | For example, a file system path `/a/b/c` can be considered as a lineage
+-- | A file system path `/a/b/c` can be considered as a lineage
 -- |
 -- | ```
 -- | (root) → a → b → c
 -- | ```
 -- |
--- | in which the `(root)` is the most ancestor, `a` is its only child,
--- | `b` is `a`'s child as well as `(root)`'s grand child, and so on.
+-- | where `(root)` is the most ancestor, `a` is its child, `b` is `a`'s child,
+-- | and `c` is `b`'s child.
 module Treen.Data.Lineage
   ( Lineage
   , fromFoldable
   , fromString
   , head
   , tail
+  , toList
   ) where
 
 import Prelude
 import Data.Array (fromFoldable, init, last) as A
 import Data.Foldable (class Foldable, length)
-import Data.List.NonEmpty (fromFoldable, head) as L1
-import Data.List.Types (NonEmptyList)
+import Data.List.NonEmpty (fromFoldable, head, toList) as L1
+import Data.List.Types (List, NonEmptyList)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
 import Treen.Util.Data.List.NonEmpty (tailOfMoreThanOne) as L1
 
--- | A lineage is a sequence of descent, aligned from ancestor to descendant.
+-- | A lineage.
 -- |
 -- | Use `fromFoldable` or `fromString` to create an instance.
 newtype Lineage = Lineage
@@ -35,15 +35,7 @@ newtype Lineage = Lineage
   , nodes :: NonEmptyList String
   }
 
--- | Make a lineage from a foldable that contains `String`.
--- |
--- | Example:
--- |
--- | ```purescript
--- | import Treen.Data.Lineage (fromFoldable)
--- |
--- | fromFoldable ["a", "b"]
--- | ```
+-- | Make a lineage from a foldable of `String`.
 fromFoldable :: forall f. Foldable f => f String -> Maybe (Lineage)
 fromFoldable xs = do
   let size = length xs
@@ -111,3 +103,7 @@ tail :: Lineage -> Maybe Lineage
 tail (Lineage { size: n, nodes: xs })
   | n == 1 = Nothing
   | otherwise = Just (Lineage { size: n - 1, nodes: L1.tailOfMoreThanOne xs })
+
+-- | Convert to a list.
+toList :: Lineage -> List String
+toList (Lineage { size: _, nodes: xs }) = L1.toList xs

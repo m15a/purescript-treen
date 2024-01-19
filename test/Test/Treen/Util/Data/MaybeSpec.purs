@@ -8,7 +8,7 @@ import Test.Spec.Assertions (shouldEqual)
 import Treen.Util.Data.Maybe
 
 maybeUtilSpec :: Spec Unit
-maybeUtilSpec = describe "Data.Maybe.Util" do
+maybeUtilSpec = describe "Treen.Util.Data.Maybe" do
 
   describe "unwrapJust" do
 

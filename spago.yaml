@@ -1,22 +1,22 @@
 package:
   name: treen
   dependencies:
-    - console
     - effect
     - node-process
     - node-streams
+    - ordered-collections
     - partial
     - prelude
     - strings
-    - tree-rose
   test:
     main: Test.Main
     dependencies:
+      - console
       - psci-support
       - spec
   run:
     main: Treen.App.Main
 workspace:
   package_set:
-    registry: 48.1.0
+    registry: 48.4.0
   extra_packages: {}
