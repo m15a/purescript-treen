@@ -1,6 +1,6 @@
 {
     "name": "treen",
-    "description": "Print anything as tree-like format.",
+    "description": "Print anything in a tree-like format.",
     "license": "MIT",
     "author": "NACAMURA Mitsuhiro <m15@m15a.dev>",
     "type" : "module",

@@ -1,2 +1,2 @@
 # purescript-treen
-Print anything as tree-like format.
+Print anything in a tree-like format.
