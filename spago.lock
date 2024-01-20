@@ -3,13 +3,19 @@ workspace:
     treen:
       path: ./
       dependencies:
+        - aff
+        - arrays
         - effect
+        - foldable-traversable
+        - lists
+        - maybe
         - node-process
         - node-streams
         - ordered-collections
         - partial
         - prelude
         - strings
+        - tuples
       test_dependencies:
         - console
         - psci-support

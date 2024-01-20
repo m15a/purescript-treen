@@ -1,13 +1,19 @@
 package:
   name: treen
   dependencies:
+    - aff
+    - arrays
     - effect
+    - foldable-traversable
+    - lists
+    - maybe
     - node-process
     - node-streams
     - ordered-collections
     - partial
     - prelude
     - strings
+    - tuples
   test:
     main: Test.Main
     dependencies:
