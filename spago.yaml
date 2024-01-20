@@ -1,5 +1,7 @@
 package:
   name: treen
+  description: |
+    Print anything as tree-like format.
   dependencies:
     - aff
     - arrays
@@ -26,6 +28,15 @@ package:
     platform: node
     type: module
     module: *main
+  publish:
+    version: 0.0.1
+    license: MIT
+    include:
+      - "bin/treen"
+      - "test/**/*.purs"
+    location:
+      githubOwner: m15a
+      githubRepo: purescript-treen
 workspace:
   package_set:
     registry: 48.4.0
