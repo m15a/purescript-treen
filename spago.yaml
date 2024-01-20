@@ -15,7 +15,11 @@ package:
       - psci-support
       - spec
   run:
-    main: Treen.App.Main
+    main: &main Treen.App.Main
+  bundle:
+    platform: node
+    type: module
+    module: *main
 workspace:
   package_set:
     registry: 48.4.0
