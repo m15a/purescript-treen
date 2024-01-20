@@ -1,20 +1,29 @@
 module Treen.App.Main (main) where
 
 import Prelude
-import Data.List (fromFoldable, mapMaybe) as L
-import Data.String.Pattern (Pattern(..))
 import Effect (Effect)
-import Effect.Aff (launchAff_)
-import Node.Process (stdin, stdout)
-import Node.Stream.Aff (fromStringUTF8, toStringUTF8, readAll, write)
-import Treen.Data.Treen (bundle, print) as T
-import Treen.Data.Lineage (fromString)
-import Treen.Util.Data.String (lines)
+import Options.Applicative (execParser)
+import Treen.App.Commands
+  ( runDefault
+  , runVersion
+  )
+import Treen.App.Options (Options(..), parserInfo)
+import Treen.Version (ersion) as V
 
 main :: Effect Unit
-main = launchAff_ do
-  ss <- readAll stdin >>= toStringUTF8 <#> lines <#> L.fromFoldable
-  let treen = T.bundle $ L.mapMaybe (fromString $ Pattern "/") ss
-  write stdout =<< fromStringUTF8 (T.print treen <> "\n")
+main = parseOptions >>= runCommand
 
--- vim: ft=haskell tw=88
+data Command
+  = Version { version :: String }
+  | Default { delim :: String }
+
+parseOptions :: Effect Command
+parseOptions = do
+  options <- execParser parserInfo
+  pure case options of
+    Options { version: true } -> Version { version: V.ersion }
+    Options { delim } -> Default { delim }
+
+runCommand :: Command -> Effect Unit
+runCommand (Version { version }) = runVersion version
+runCommand (Default { delim }) = runDefault delim
