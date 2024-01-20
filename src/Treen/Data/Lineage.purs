@@ -1,4 +1,4 @@
--- | Lineage represents a sequence of direction from ancestor to descendant.
+-- | Lineage represents a sequence of some tokens from ancestor to descendant.
 -- |
 -- | A file system path `/a/b/c` can be considered as a lineage
 -- |
@@ -6,8 +6,8 @@
 -- | (root) → a → b → c
 -- | ```
 -- |
--- | where `(root)` is the most ancestor, `a` is its child, `b` is `a`'s child,
--- | and `c` is `b`'s child.
+-- | where `(root)`, actually a token of empty string `""`, is the most ancestor,
+-- | `a` is its child, `b` is `a`'s child, and `c` is `b`'s child.
 module Treen.Data.Lineage
   ( Lineage
   , fromFoldable
@@ -35,22 +35,31 @@ newtype Lineage = Lineage
   , nodes :: NonEmptyList String
   }
 
--- | Make a lineage from a foldable of `String`.
-fromFoldable :: forall f. Foldable f => f String -> Maybe (Lineage)
+-- | Make a lineage from a foldable of strings.
+-- | Empty foldable yields nothing.
+fromFoldable :: forall f. Foldable f => f String -> Maybe Lineage
 fromFoldable xs = do
-  let size = length xs
   nodes <- L1.fromFoldable xs
+  let size = length nodes
   pure $ Lineage { size, nodes }
 
--- | Make a lineage from a string separated by the given separator `sep`.
+-- | Make a lineage from a string, separating tokens by the given separator `sep`.
 -- |
--- | Example:
+-- | If there is an empty string before the first separator in the string, it will be
+-- | regarded as a token of empty string.
+-- | If there is an empty string after the last separator, it will be ignored.
+-- |
+-- | Examples:
 -- |
 -- | ```purescript
 -- | import Treen.Data.Lineage (fromString)
 -- | import Data.String.Pattern (Pattern(..))
 -- |
--- | fromString (Pattern ".") "a.b.c"
+-- | fromString (Pattern ".") "a.b"   -- yields lineage a → b, and
+-- | fromString (Pattern ".") "a.b."  -- also yields a → b, ignoring the last empty token.
+-- | fromString (Pattern ".") ".a.b"  -- yields lineage (empty token) → a → b.
+-- | fromString (Pattern ".") "."     -- yields singleton lineage (empty token).
+-- | fromString (Pattern ".") ""      -- yields nothing.
 -- | ```
 fromString :: Pattern -> String -> Maybe Lineage
 fromString sep = split sep >>> trimLastEmpty >>> fromFoldable
@@ -63,8 +72,7 @@ fromString sep = split sep >>> trimLastEmpty >>> fromFoldable
 instance Eq Lineage where
   eq (Lineage { size: m, nodes: xs }) (Lineage { size: n, nodes: ys })
     | m /= n = false
-    | xs == ys = true
-    | otherwise = false
+    | otherwise = eq xs ys
 
 instance Ord Lineage where
   compare (Lineage { size: 1, nodes: xs }) (Lineage { size: 1, nodes: ys })
