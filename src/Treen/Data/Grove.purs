@@ -26,13 +26,14 @@
 -- |
 -- | NOTE: Muptiple edges branching from the same node cannot have the same name.
 module Treen.Data.Grove
-  ( Grove(..)
+  ( Grove
   , cons
   , empty
   , fromFoldable
   , insert
   , merge
   , print
+  , printWith
   , singleton
   ) where
 
@@ -65,9 +66,13 @@ instance Show a => Show (Grove a) where
 
 -- | Print a grove, interpreted as node-named trees.
 print :: forall a. Show a => Ord a => Grove a -> String
-print (Grove m) =
+print = printWith show
+
+-- | Print a grove with a customized formatter.
+printWith :: forall a. Ord a => (a -> String) -> Grove a -> String
+printWith format (Grove m) =
   m # M.toUnfoldable
-    # map print'
+    # map (printTreeWith format)
     # S.joinWith "\n"
 
 -- | A node in a tree is either root, older sibling, or the last child.
@@ -77,9 +82,9 @@ data NodeType
   | OlderChild
   | LastChild
 
--- | Print a tree in a grove, interpreted as node-named.
-print' :: forall a. Show a => Ord a => Tuple a (Grove a) -> String
-print' = go Root "" >>> S.trimLastEndOfLine
+-- | Print a tree in a grove with a customized formatter.
+printTreeWith :: forall a. Ord a => (a -> String) -> Tuple a (Grove a) -> String
+printTreeWith format = go Root "" >>> S.trimLastEndOfLine
   where
   go nodeType header (Tuple nodeName (Grove children)) =
     let
@@ -100,7 +105,7 @@ print' = go Root "" >>> S.trimLastEndOfLine
         n = M.size children - 1
         children' = M.toUnfoldable children :: Array _
     in
-      header <> branch <> show nodeName <> "\n" <> andMore
+      header <> branch <> format nodeName <> "\n" <> andMore
 
 -- | Insert an edge directed to a child grove into another target grove.
 -- |
