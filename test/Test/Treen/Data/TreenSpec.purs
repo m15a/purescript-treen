@@ -5,6 +5,7 @@ import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Treen.Data.Lineage (fromString)
+import Treen.Data.Tileset (colon) as TS
 import Treen.Util.Data.Maybe (unwrapJust)
 import Treen.Util.Data.String (trimMargin)
 
@@ -33,6 +34,27 @@ treenSpec = describe "Treen.Data.Treen" do
         └── d
             └── c"""
     print t `shouldEqual` likeThis
+
+  it "can also be printed like this" do
+    let
+      mkL = fromString (Pattern "/") >>> unwrapJust
+      ls =
+        [ mkL "a/b/c"
+        , mkL "a"
+        , mkL "a/b/a/b"
+        , mkL "a/d/c"
+        ]
+      t = bundle ls
+      likeThis = trimMargin
+        """
+        a:
+          b:
+            a:
+              b
+            c
+          d:
+            c"""
+    printWith TS.colon (\s -> s) t `shouldEqual` likeThis
 
   it "compares treens alphabetically then in depth" do
     let

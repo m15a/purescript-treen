@@ -42,11 +42,13 @@ import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable, foldr)
 import Data.FoldableWithIndex (foldlWithIndex, foldrWithIndex)
 import Data.Map (Map)
-import Data.Map (empty, insertWith, singleton, size, toUnfoldable) as M
+import Data.Map (empty, insertWith, isEmpty, singleton, size, toUnfoldable) as M
 import Data.Maybe (Maybe(..))
 import Data.Ord (class Ord1)
 import Data.String (joinWith) as S
 import Data.Tuple (Tuple(..))
+import Treen.Data.Tileset (Tileset)
+import Treen.Data.Tileset (tree) as TS
 import Treen.Util.Data.String (trimLastEndOfLine) as S
 
 newtype Grove a = Grove (Map a (Grove a))
@@ -66,36 +68,41 @@ instance Show a => Show (Grove a) where
 
 -- | Print a grove, interpreted as node-named trees.
 print :: forall a. Show a => Ord a => Grove a -> String
-print = printWith show
+print = printWith TS.tree show
 
--- | Print a grove with a customized formatter.
-printWith :: forall a. Ord a => (a -> String) -> Grove a -> String
-printWith format (Grove m) =
+-- | Print a grove with a customized tileset and a name formatter.
+printWith :: forall a. Ord a => Tileset -> (a -> String) -> Grove a -> String
+printWith tileset formatter (Grove m) =
   m # M.toUnfoldable
-    # map (printTreeWith format)
+    # map (printTreeWith tileset formatter)
     # S.joinWith "\n"
 
--- | A node in a tree is either root, older sibling, or the last child.
+-- | A node in a tree is either root, older child, or the last child.
 -- | Used for pretty-printing the tree.
 data NodeType
   = Root
   | OlderChild
   | LastChild
 
--- | Print a tree in a grove with a customized formatter.
-printTreeWith :: forall a. Ord a => (a -> String) -> Tuple a (Grove a) -> String
-printTreeWith format = go Root "" >>> S.trimLastEndOfLine
+-- | Print a tree in a grove with a customized tileset and a name formatter.
+printTreeWith
+  :: forall a. Ord a => Tileset -> (a -> String) -> Tuple a (Grove a) -> String
+printTreeWith tileset formatter = go Root "" >>> S.trimLastEndOfLine
   where
-  go nodeType header (Tuple nodeName (Grove children)) =
+  go nodeType header (Tuple name (Grove children)) =
     let
       branch = case nodeType of
-        OlderChild -> "├── "
-        LastChild -> "└── "
+        OlderChild -> tileset.olderChildBranch
+        LastChild -> tileset.lastChildBranch
         _ -> ""
+      isLeaf = M.isEmpty children
+      name' =
+        if isLeaf then tileset.leafPrefix <> formatter name <> tileset.leafPostfix
+        else tileset.branchPrefix <> formatter name <> tileset.branchPostfix
       header' = header <>
         case nodeType of
-          OlderChild -> "│   "
-          LastChild -> "    "
+          OlderChild -> tileset.olderChildHeader
+          LastChild -> tileset.lastChildHeader
           _ -> ""
       andMore = foldlWithIndex (\i s t -> s <> go (nodeTypeOf i) header' t) "" children'
         where
@@ -105,7 +112,7 @@ printTreeWith format = go Root "" >>> S.trimLastEndOfLine
         n = M.size children - 1
         children' = M.toUnfoldable children :: Array _
     in
-      header <> branch <> format nodeName <> "\n" <> andMore
+      header <> branch <> name' <> "\n" <> andMore
 
 -- | Insert an edge directed to a child grove into another target grove.
 -- |
