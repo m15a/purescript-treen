@@ -16,10 +16,10 @@ import Node.FS.Aff (readTextFile)
 import Node.Process (stdin, stdout)
 import Node.Stream.Aff (fromStringUTF8, toStringUTF8, readAll, write)
 import Treen.App.Options (Input(..), Tileset, tilesetOf)
+import Treen.App.Version (ersion) as V
 import Treen.Data.Lineage (fromString) as L
 import Treen.Data.Treen (bundle, printWith) as T
 import Treen.Util.Data.String (lines) as S
-import Treen.Version (ersion) as V
 
 data Command
   = Version
