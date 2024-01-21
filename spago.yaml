@@ -10,6 +10,7 @@ package:
     - foldable-traversable
     - lists
     - maybe
+    - node-fs
     - node-process
     - node-streams
     - optparse

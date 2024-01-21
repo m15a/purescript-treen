@@ -1,28 +1,35 @@
 module Treen.App.Main (main) where
 
 import Prelude
+import Data.List.Types (List(Nil))
 import Effect (Effect)
 import Options.Applicative (execParser)
 import Treen.App.Commands
-  ( runDefault
+  ( Command(..)
+  , runDefault
   , runVersion
   )
-import Treen.App.Options (Options(..), Tileset, parserInfo)
+import Treen.App.Options
+  ( Input(..)
+  , Options(..)
+  , parserInfo
+  )
 
 main :: Effect Unit
 main = parseOptions >>= runCommand
 
-data Command
-  = Version
-  | Default { delim :: String, tileset :: Tileset }
-
 parseOptions :: Effect Command
 parseOptions = do
   options <- execParser parserInfo
-  pure case options of
-    Options { version: true } -> Version
-    Options { delim, tileset } -> Default { delim, tileset }
+  let
+    input = case options of
+      Options { args: Nil } -> Stdin
+      Options { args } -> Files args
+    command = case options of
+      Options { version: true } -> Version
+      Options { delim, tileset } -> Default { input, delim, tileset }
+  pure command
 
 runCommand :: Command -> Effect Unit
 runCommand Version = runVersion
-runCommand (Default { delim, tileset }) = runDefault { delim, tileset }
+runCommand (Default options) = runDefault options

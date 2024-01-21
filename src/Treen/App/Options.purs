@@ -1,34 +1,43 @@
 module Treen.App.Options
-  ( Options(..)
+  ( Input(..)
+  , Options(..)
   , Tileset(..)
   , parserInfo
   , tilesetOf
   ) where
 
 import Prelude
-import Data.Foldable (fold)
 import Data.Either (Either(..))
+import Data.Foldable (fold)
+import Data.List.Types (List)
 import Options.Applicative
   ( (<**>)
   , Parser
   , ParserInfo
   , ReadM
+  , argument
   , eitherReader
-  , header
   , fullDesc
+  , header
   , help
   , helper
   , info
   , long
+  , many
   , metavar
   , option
   , short
   , showDefault
+  , str
   , strOption
   , switch
   , value
   )
-import Treen.Data.Tileset (Tileset, tree, colon) as TS
+import Treen.Data.Tileset
+  ( Tileset
+  , tree
+  , colon
+  ) as TS
 
 parserInfo :: ParserInfo Options
 parserInfo = info (optionsSpec <**> helper) $ fold
@@ -54,10 +63,15 @@ tilesetOf :: Tileset -> TS.Tileset
 tilesetOf Tree = TS.tree
 tilesetOf Colon = TS.colon
 
+data Input
+  = Stdin
+  | Files (List String)
+
 data Options = Options
   { version :: Boolean
   , delim :: String
   , tileset :: Tileset
+  , args :: List String
   }
 
 optionsSpec :: Parser Options
@@ -87,9 +101,12 @@ optionsSpec = ado
     , value Tree
     ]
 
+  args <- many $ argument str $ metavar "FILES..."
+
   in
     Options
       { version
       , delim
       , tileset
+      , args
       }
