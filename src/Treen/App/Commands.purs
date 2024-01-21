@@ -8,15 +8,16 @@ import Data.List (fromFoldable, mapMaybe) as L
 import Data.String.Pattern (Pattern(..))
 import Effect (Effect)
 import Effect.Aff (launchAff_)
+import Effect.Console (info)
 import Node.Process (stdin, stdout)
 import Node.Stream.Aff (fromStringUTF8, toStringUTF8, readAll, write)
 import Treen.Data.Lineage (fromString)
 import Treen.Data.Treen (bundle, print) as T
 import Treen.Util.Data.String (lines)
+import Treen.Version (ersion) as V
 
-runVersion :: String -> Effect Unit
-runVersion version = launchAff_ do
-  write stdout =<< fromStringUTF8 (version <> "\n")
+runVersion :: Effect Unit
+runVersion = info V.ersion
 
 runDefault :: String -> Effect Unit
 runDefault delim = launchAff_ do

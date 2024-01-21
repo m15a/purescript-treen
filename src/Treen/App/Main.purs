@@ -8,22 +8,21 @@ import Treen.App.Commands
   , runVersion
   )
 import Treen.App.Options (Options(..), parserInfo)
-import Treen.Version (ersion) as V
 
 main :: Effect Unit
 main = parseOptions >>= runCommand
 
 data Command
-  = Version { version :: String }
+  = Version
   | Default { delim :: String }
 
 parseOptions :: Effect Command
 parseOptions = do
   options <- execParser parserInfo
   pure case options of
-    Options { version: true } -> Version { version: V.ersion }
+    Options { version: true } -> Version
     Options { delim } -> Default { delim }
 
 runCommand :: Command -> Effect Unit
-runCommand (Version { version }) = runVersion version
+runCommand Version = runVersion
 runCommand (Default { delim }) = runDefault delim

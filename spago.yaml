@@ -5,6 +5,7 @@ package:
   dependencies:
     - aff
     - arrays
+    - console
     - effect
     - foldable-traversable
     - lists
@@ -20,7 +21,6 @@ package:
   test:
     main: Test.Main
     dependencies:
-      - console
       - psci-support
       - spec
   run:

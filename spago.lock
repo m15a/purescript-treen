@@ -5,6 +5,7 @@ workspace:
       dependencies:
         - aff
         - arrays
+        - console
         - effect
         - foldable-traversable
         - lists
@@ -18,7 +19,6 @@ workspace:
         - strings
         - tuples
       test_dependencies:
-        - console
         - psci-support
         - spec
       build_plan:
