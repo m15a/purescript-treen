@@ -24,10 +24,10 @@ BUGFIX="$(echo -n "$CURRENT" | cut -d. -f3)"
 
 case "$BUMP_STRATEGY" in
     major)
-        NEXT="$(("$MAJOR" + 1)).$MINOR.$BUGFIX"
+        NEXT="$(("$MAJOR" + 1)).0.0"
         ;;
     minor)
-        NEXT="$MAJOR.$(("$MINOR" + 1)).$BUGFIX"
+        NEXT="$MAJOR.$(("$MINOR" + 1)).0"
         ;;
     bugfix)
         NEXT="$MAJOR.$MINOR.$(("$BUGFIX" + 1))"
