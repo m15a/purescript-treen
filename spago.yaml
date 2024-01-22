@@ -6,7 +6,9 @@ package:
     - aff
     - arrays
     - console
+    - control
     - effect
+    - either
     - foldable-traversable
     - lists
     - maybe
@@ -17,6 +19,7 @@ package:
     - ordered-collections
     - partial
     - prelude
+    - string-parsers
     - strings
     - tuples
   test:

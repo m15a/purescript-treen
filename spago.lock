@@ -6,7 +6,9 @@ workspace:
         - aff
         - arrays
         - console
+        - control
         - effect
+        - either
         - foldable-traversable
         - lists
         - maybe
@@ -17,6 +19,7 @@ workspace:
         - ordered-collections
         - partial
         - prelude
+        - string-parsers
         - strings
         - tuples
       test_dependencies:
@@ -85,6 +88,7 @@ workspace:
         - safe-coerce
         - spec
         - st
+        - string-parsers
         - strings
         - tailrec
         - transformers
@@ -1278,6 +1282,21 @@ packages:
       - prelude
       - tailrec
       - unsafe-coerce
+  string-parsers:
+    type: registry
+    version: 8.0.0
+    integrity: sha256-9ATYh0S54ERoR+uhkCM59wBRvW/6zv6geHJ0TmcI644=
+    dependencies:
+      - arrays
+      - bifunctors
+      - control
+      - either
+      - foldable-traversable
+      - lists
+      - maybe
+      - prelude
+      - strings
+      - tailrec
   strings:
     type: registry
     version: 6.0.1

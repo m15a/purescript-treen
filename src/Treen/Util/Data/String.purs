@@ -1,18 +1,25 @@
 -- | Miscellaneous helper functions for string manipulation.
 module Treen.Util.Data.String
-  ( lines
+  ( fromChars
+  , lines
   , trimLastEndOfLine
   , trimMargin
   ) where
 
 import Prelude
+import Data.Array (fromFoldable) as A
 import Data.Array.NonEmpty (mapMaybe) as A1
-import Data.Foldable (minimum)
+import Data.Foldable (class Foldable, minimum)
 import Data.Maybe (Maybe, fromMaybe)
 import Data.String (length)
+import Data.String.CodeUnits (fromCharArray)
 import Data.String.Regex (match, replace, split)
 import Data.String.Regex.Flags (global, multiline, noFlags)
 import Data.String.Regex.Unsafe (unsafeRegex)
+
+-- | Concat a foldable of chars into a string.
+fromChars :: forall f. Foldable f => f Char -> String
+fromChars = fromCharArray <<< A.fromFoldable
 
 -- | See https://github.com/menelaos/purescript-stringutils/blob/v0.0.12/src/Data/String/Utils.purs#L232-L232
 -- | and http://www.unicode.org/reports/tr18/#RL1.6
