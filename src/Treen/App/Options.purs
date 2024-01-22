@@ -1,5 +1,7 @@
 module Treen.App.Options
   ( Input(..)
+  , Mode(..)
+  , CommitLogFormat(..)
   , Options(..)
   , Tileset(..)
   , parserInfo
@@ -45,31 +47,57 @@ parserInfo = info (optionsSpec <**> helper) $ fold
   , fullDesc
   ]
 
+data Mode
+  = DefaultMode
+  | CommitLogMode
+
+instance Show Mode where
+  show DefaultMode = "default"
+  show CommitLogMode = "commitlog"
+
+mode_ :: ReadM Mode
+mode_ = eitherReader case _ of
+  "default" -> Right DefaultMode
+  "commitlog" -> Right CommitLogMode
+  _ -> Left "invalid mode"
+
+data CommitLogFormat = OnelineCommitLogFormat
+
+instance Show CommitLogFormat where
+  show OnelineCommitLogFormat = "oneline"
+
+commitLogFormat_ :: ReadM CommitLogFormat
+commitLogFormat_ = eitherReader case _ of
+  "oneline" -> Right OnelineCommitLogFormat
+  _ -> Left "invalid commit log format"
+
 data Tileset
-  = Tree
-  | Colon
+  = TreeTileset
+  | ColonTileset
 
 instance Show Tileset where
-  show Tree = "tree"
-  show Colon = "colon"
+  show TreeTileset = "tree"
+  show ColonTileset = "colon"
 
 tileset_ :: ReadM Tileset
 tileset_ = eitherReader case _ of
-  "tree" -> Right Tree
-  "colon" -> Right Colon
+  "tree" -> Right TreeTileset
+  "colon" -> Right ColonTileset
   _ -> Left "invalid tileset"
 
 tilesetOf :: Tileset -> TS.Tileset
-tilesetOf Tree = TS.tree
-tilesetOf Colon = TS.colon
+tilesetOf TreeTileset = TS.tree
+tilesetOf ColonTileset = TS.colon
 
 data Input
-  = Stdin
-  | Files (List String)
+  = StdinInput
+  | FilesInput (List String)
 
 data Options = Options
   { version :: Boolean
+  , mode :: Mode
   , delim :: String
+  , commitLogFormat :: CommitLogFormat
   , tileset :: Tileset
   , args :: List String
   }
@@ -83,13 +111,30 @@ optionsSpec = ado
     , help "Show version and exit"
     ]
 
+  mode <- option mode_ $ fold
+    [ long "mode"
+    , short 'm'
+    , metavar "MODE"
+    , help "Use MODE (default|commitlog) to parse inputs"
+    , showDefault
+    , value DefaultMode
+    ]
+
   delim <- strOption $ fold
     [ long "delimiter"
     , short 'd'
     , metavar "DELIM"
-    , help "Use DELIM to delimit tokens in each line"
+    , help "Use DELIM to delimit tokens in each line in default mode"
     , showDefault
     , value "/"
+    ]
+
+  commitLogFormat <- option commitLogFormat_ $ fold
+    [ long "commitlog-format"
+    , metavar "FORMAT"
+    , help "Use FORMAT (oneline) to parse commit log inputs"
+    , showDefault
+    , value OnelineCommitLogFormat
     ]
 
   tileset <- option tileset_ $ fold
@@ -98,7 +143,7 @@ optionsSpec = ado
     , metavar "TILESET"
     , help "Use TILESET (tree|colon) to print trees"
     , showDefault
-    , value Tree
+    , value TreeTileset
     ]
 
   args <- many $ argument str $ metavar "FILES..."
@@ -106,7 +151,9 @@ optionsSpec = ado
   in
     Options
       { version
+      , mode
       , delim
+      , commitLogFormat
       , tileset
       , args
       }

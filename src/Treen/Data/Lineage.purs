@@ -12,6 +12,7 @@ module Treen.Data.Lineage
   ( Lineage
   , fromFoldable
   , fromString
+  , fromOnelineCommitLog
   , head
   , tail
   , toList
@@ -26,6 +27,7 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
 import Treen.Util.Data.List.NonEmpty (tailOfMoreThanOne) as L1
+import Treen.Data.CommitLog.Oneline (OnelineCommitLog(..))
 
 -- | A lineage.
 -- |
@@ -68,6 +70,33 @@ fromString sep = split sep >>> trimLastEmpty >>> fromFoldable
     x <- A.last a
     if x == "" then A.init a
     else pure a
+
+-- | Make a lineage from a Git oneline commit log.
+-- |
+-- | Precedence of the attributes are
+-- |
+-- |     1. `type_` and optional `!`,
+-- |     2. `scope`, and finally
+-- |     3. `hash` and `title`.
+fromOnelineCommitLog :: OnelineCommitLog -> Maybe Lineage
+fromOnelineCommitLog log = do
+  fromFoldable case log of
+    OnelineCommitLog { hash, type_: Nothing, scope: Nothing, bang: _, title } ->
+      [ hash <> " " <> title
+      ]
+    OnelineCommitLog { hash, type_: Just type_', scope: Nothing, bang, title } ->
+      [ type_' <> if bang then "!" else ""
+      , hash <> " " <> title
+      ]
+    OnelineCommitLog { hash, type_: Just type_', scope: Just scope', bang, title } ->
+      [ type_' <> if bang then "!" else ""
+      , scope'
+      , hash <> " " <> title
+      ]
+    OnelineCommitLog { hash, type_: Nothing, scope: Just scope', bang: _, title } ->
+      [ scope'
+      , hash <> " " <> title
+      ]
 
 instance Eq Lineage where
   eq (Lineage { size: m, nodes: xs }) (Lineage { size: n, nodes: ys })

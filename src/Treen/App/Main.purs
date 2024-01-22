@@ -6,11 +6,14 @@ import Effect (Effect)
 import Options.Applicative (execParser)
 import Treen.App.Commands
   ( Command(..)
-  , runDefault
-  , runVersion
+  , runDefaultCommand
+  , runVersionCommand
+  , runOnelineCommitLogCommand
   )
 import Treen.App.Options
   ( Input(..)
+  , Mode(..)
+  , CommitLogFormat(..)
   , Options(..)
   , parserInfo
   )
@@ -23,13 +26,17 @@ parseOptions = do
   options <- execParser parserInfo
   let
     input = case options of
-      Options { args: Nil } -> Stdin
-      Options { args } -> Files args
+      Options { args: Nil } -> StdinInput
+      Options { args } -> FilesInput args
     command = case options of
-      Options { version: true } -> Version
-      Options { delim, tileset } -> Default { input, delim, tileset }
+      Options { version: true } -> VersionCommand
+      Options { mode: DefaultMode, delim, tileset } -> DefaultCommand
+        { input, delim, tileset }
+      Options { mode: CommitLogMode, commitLogFormat: OnelineCommitLogFormat, tileset } ->
+        OnelineCommitLogCommand { input, tileset }
   pure command
 
 runCommand :: Command -> Effect Unit
-runCommand Version = runVersion
-runCommand (Default options) = runDefault options
+runCommand VersionCommand = runVersionCommand
+runCommand (DefaultCommand options) = runDefaultCommand options
+runCommand (OnelineCommitLogCommand options) = runOnelineCommitLogCommand options
