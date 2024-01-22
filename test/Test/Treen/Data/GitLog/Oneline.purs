@@ -1,19 +1,19 @@
-module Test.Treen.Data.CommitLog.OnelineSpec (onelineCommitLogSpec) where
+module Test.Treen.Data.GitLog.OnelineSpec (onelineGitLogSpec) where
 
 import Prelude (Unit, discard)
 import Data.Maybe (Maybe(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Treen.Data.CommitLog.Oneline
+import Treen.Data.GitLog.Oneline
 
-onelineCommitLogSpec :: Spec Unit
-onelineCommitLogSpec = describe "Treen.Data.CommitLog.Oneline" do
+onelineGitLogSpec :: Spec Unit
+onelineGitLogSpec = describe "Treen.Data.GitLog.Oneline" do
 
-  it "understands plain oneline commit log" do
+  it "understands plain oneline Git log" do
     let
       actual = fromString "36c8b39 Initial commit"
-      expected = OnelineCommitLog
+      expected = OnelineGitLog
         { hash: "36c8b39"
         , type_: Nothing
         , scope: Nothing
@@ -22,10 +22,10 @@ onelineCommitLogSpec = describe "Treen.Data.CommitLog.Oneline" do
         }
     actual `shouldEqual` Just expected
 
-  it "understands oneline commit log with basic prefix" do
+  it "understands oneline Git log with basic prefix" do
     let
       actual = fromString "36c8b39 fix: something"
-      expected = OnelineCommitLog
+      expected = OnelineGitLog
         { hash: "36c8b39"
         , type_: Just "fix"
         , scope: Nothing
@@ -34,10 +34,10 @@ onelineCommitLogSpec = describe "Treen.Data.CommitLog.Oneline" do
         }
     actual `shouldEqual` Just expected
 
-  it "understands oneline commit log with bang in prefix" do
+  it "understands oneline Git log with bang in prefix" do
     let
       actual = fromString "36c8b39 fix!: breaks something"
-      expected = OnelineCommitLog
+      expected = OnelineGitLog
         { hash: "36c8b39"
         , type_: Just "fix"
         , scope: Nothing
@@ -46,10 +46,10 @@ onelineCommitLogSpec = describe "Treen.Data.CommitLog.Oneline" do
         }
     actual `shouldEqual` Just expected
 
-  it "understands oneline commit log with fully-featured prefix" do
+  it "understands oneline Git log with fully-featured prefix" do
     let
       actual = fromString "36c8b39 fix(release)!: breaks something"
-      expected = OnelineCommitLog
+      expected = OnelineGitLog
         { hash: "36c8b39"
         , type_: Just "fix"
         , scope: Just "release"
@@ -61,7 +61,7 @@ onelineCommitLogSpec = describe "Treen.Data.CommitLog.Oneline" do
   it "falls back to plain log when parsing fails" do
     let
       actual = fromString "36c8b39 :what are these colon parens?:"
-      expected = OnelineCommitLog
+      expected = OnelineGitLog
         { hash: "36c8b39"
         , type_: Nothing
         , scope: Nothing

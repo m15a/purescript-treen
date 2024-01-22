@@ -1,8 +1,8 @@
--- | Git oneline commit log.
+-- | Git oneline Git log.
 -- |
 -- | It follows the [conventional commits](https://www.conventionalcommits.org).
-module Treen.Data.CommitLog.Oneline
-  ( OnelineCommitLog(..)
+module Treen.Data.GitLog.Oneline
+  ( OnelineGitLog(..)
   , fromString
   , fromString'
   ) where
@@ -24,7 +24,7 @@ import StringParser.Parser (ParseError, Parser, runParser)
 import Treen.Util.Data.String (fromChars) as S
 import Treen.Util.StringParser.CodePoints (anyHex)
 
-newtype OnelineCommitLog = OnelineCommitLog
+newtype OnelineGitLog = OnelineGitLog
   { hash :: String
   , type_ :: Maybe String
   , scope :: Maybe String
@@ -32,42 +32,42 @@ newtype OnelineCommitLog = OnelineCommitLog
   , title :: String
   }
 
-type OnelineCommitLogPrefix =
+type OnelineGitLogPrefix =
   { type_ :: Maybe String
   , scope :: Maybe String
   , bang :: Boolean
   }
 
-derive newtype instance Eq OnelineCommitLog
+derive newtype instance Eq OnelineGitLog
 
-derive newtype instance Show OnelineCommitLog
+derive newtype instance Show OnelineGitLog
 
--- | Read a string as a oneline commit log. Return nothing if fails.
-fromString :: String -> Maybe OnelineCommitLog
+-- | Read a string as a oneline Git log. Return nothing if fails.
+fromString :: String -> Maybe OnelineGitLog
 fromString = fromString' >>> hush
 
 -- | Returns `Either` for using parser error messages.
-fromString' :: String -> Either ParseError OnelineCommitLog
-fromString' = runParser parseOnelineCommitLog
+fromString' :: String -> Either ParseError OnelineGitLog
+fromString' = runParser parseOnelineGitLog
 
-parseOnelineCommitLog :: Parser OnelineCommitLog
-parseOnelineCommitLog = do
+parseOnelineGitLog :: Parser OnelineGitLog
+parseOnelineGitLog = do
   skipSpaces
-  hash <- parseOnelineCommitLogHash
+  hash <- parseOnelineGitLogHash
   skipSpaces
-  { type_, scope, bang } <- try parseOnelineCommitLogPrefix <|> noPrefix
+  { type_, scope, bang } <- try parseOnelineGitLogPrefix <|> noPrefix
   skipSpaces
-  title <- parseOnelineCommitLogTitle
+  title <- parseOnelineGitLogTitle
   skipSpaces
-  pure $ OnelineCommitLog { hash, type_, scope, bang, title }
+  pure $ OnelineGitLog { hash, type_, scope, bang, title }
   where
   noPrefix = pure { type_: Nothing, scope: Nothing, bang: false }
 
-parseOnelineCommitLogHash :: Parser String
-parseOnelineCommitLogHash = many1 anyHex <#> S.fromChars
+parseOnelineGitLogHash :: Parser String
+parseOnelineGitLogHash = many1 anyHex <#> S.fromChars
 
-parseOnelineCommitLogPrefix :: Parser OnelineCommitLogPrefix
-parseOnelineCommitLogPrefix = do
+parseOnelineGitLogPrefix :: Parser OnelineGitLogPrefix
+parseOnelineGitLogPrefix = do
   type_ <- many1 alphaNum <#> S.fromChars
   skipSpaces
   scope <- optionMaybe (parseScope <#> S.fromChars <#> S.trim)
@@ -81,5 +81,5 @@ parseOnelineCommitLogPrefix = do
   hasBang Nothing = false
   hasBang (Just _) = true
 
-parseOnelineCommitLogTitle :: Parser String
-parseOnelineCommitLogTitle = many1 anyChar <#> S.fromChars <#> S.trim
+parseOnelineGitLogTitle :: Parser String
+parseOnelineGitLogTitle = many1 anyChar <#> S.fromChars <#> S.trim

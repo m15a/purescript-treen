@@ -1,7 +1,7 @@
 module Treen.App.Options
   ( Input(..)
   , Mode(..)
-  , CommitLogFormat(..)
+  , GitLogFormat(..)
   , Options(..)
   , Tileset(..)
   , parserInfo
@@ -49,27 +49,27 @@ parserInfo = info (optionsSpec <**> helper) $ fold
 
 data Mode
   = DefaultMode
-  | CommitLogMode
+  | GitLogMode
 
 instance Show Mode where
   show DefaultMode = "default"
-  show CommitLogMode = "commitlog"
+  show GitLogMode = "gitlog"
 
 mode_ :: ReadM Mode
 mode_ = eitherReader case _ of
   "default" -> Right DefaultMode
-  "commitlog" -> Right CommitLogMode
+  "gitlog" -> Right GitLogMode
   _ -> Left "invalid mode"
 
-data CommitLogFormat = OnelineCommitLogFormat
+data GitLogFormat = OnelineGitLogFormat
 
-instance Show CommitLogFormat where
-  show OnelineCommitLogFormat = "oneline"
+instance Show GitLogFormat where
+  show OnelineGitLogFormat = "oneline"
 
-commitLogFormat_ :: ReadM CommitLogFormat
-commitLogFormat_ = eitherReader case _ of
-  "oneline" -> Right OnelineCommitLogFormat
-  _ -> Left "invalid commit log format"
+gitLogFormat_ :: ReadM GitLogFormat
+gitLogFormat_ = eitherReader case _ of
+  "oneline" -> Right OnelineGitLogFormat
+  _ -> Left "invalid Git log format"
 
 data Tileset
   = TreeTileset
@@ -97,7 +97,7 @@ data Options = Options
   { version :: Boolean
   , mode :: Mode
   , delim :: String
-  , commitLogFormat :: CommitLogFormat
+  , gitLogFormat :: GitLogFormat
   , tileset :: Tileset
   , args :: List String
   }
@@ -115,7 +115,7 @@ optionsSpec = ado
     [ long "mode"
     , short 'm'
     , metavar "MODE"
-    , help "Use MODE (default|commitlog) to parse inputs"
+    , help "Use MODE (default|gitlog) to parse inputs"
     , showDefault
     , value DefaultMode
     ]
@@ -129,12 +129,12 @@ optionsSpec = ado
     , value "/"
     ]
 
-  commitLogFormat <- option commitLogFormat_ $ fold
-    [ long "commitlog-format"
+  gitLogFormat <- option gitLogFormat_ $ fold
+    [ long "gitlog-format"
     , metavar "FORMAT"
-    , help "Use FORMAT (oneline) to parse commit log inputs"
+    , help "Use FORMAT (oneline) to parse Git log inputs"
     , showDefault
-    , value OnelineCommitLogFormat
+    , value OnelineGitLogFormat
     ]
 
   tileset <- option tileset_ $ fold
@@ -153,7 +153,7 @@ optionsSpec = ado
       { version
       , mode
       , delim
-      , commitLogFormat
+      , gitLogFormat
       , tileset
       , args
       }

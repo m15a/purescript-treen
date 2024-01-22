@@ -8,12 +8,12 @@ import Treen.App.Commands
   ( Command(..)
   , runDefaultCommand
   , runVersionCommand
-  , runOnelineCommitLogCommand
+  , runOnelineGitLogCommand
   )
 import Treen.App.Options
   ( Input(..)
   , Mode(..)
-  , CommitLogFormat(..)
+  , GitLogFormat(..)
   , Options(..)
   , parserInfo
   )
@@ -32,11 +32,11 @@ parseOptions = do
       Options { version: true } -> VersionCommand
       Options { mode: DefaultMode, delim, tileset } -> DefaultCommand
         { input, delim, tileset }
-      Options { mode: CommitLogMode, commitLogFormat: OnelineCommitLogFormat, tileset } ->
-        OnelineCommitLogCommand { input, tileset }
+      Options { mode: GitLogMode, gitLogFormat: OnelineGitLogFormat, tileset } ->
+        OnelineGitLogCommand { input, tileset }
   pure command
 
 runCommand :: Command -> Effect Unit
 runCommand VersionCommand = runVersionCommand
 runCommand (DefaultCommand options) = runDefaultCommand options
-runCommand (OnelineCommitLogCommand options) = runOnelineCommitLogCommand options
+runCommand (OnelineGitLogCommand options) = runOnelineGitLogCommand options
