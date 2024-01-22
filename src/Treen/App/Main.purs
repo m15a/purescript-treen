@@ -1,10 +1,11 @@
 module Treen.App.Main (main) where
 
 import Prelude
+import Data.Array (fromFoldable) as A
 import Data.List.Types (List(Nil))
 import Effect (Effect)
 import Options.Applicative (execParser)
-import Treen.App.Commands
+import Treen.App.Command
   ( Command(..)
   , runDefaultCommand
   , runVersionCommand
@@ -27,11 +28,11 @@ parseOptions = do
   let
     input = case options of
       Options { args: Nil } -> StdinInput
-      Options { args } -> FilesInput args
+      Options { args } -> FilesInput (A.fromFoldable args)
     command = case options of
       Options { version: true } -> VersionCommand
-      Options { mode: DefaultMode, delim, tileset } -> DefaultCommand
-        { input, delim, tileset }
+      Options { mode: DefaultMode, delim, tileset } ->
+        DefaultCommand { input, delim, tileset }
       Options { mode: GitLogMode, gitLogFormat: OnelineGitLogFormat, tileset } ->
         OnelineGitLogCommand { input, tileset }
   pure command

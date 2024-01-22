@@ -12,6 +12,7 @@ import Prelude
 import Data.Either (Either(..))
 import Data.Foldable (fold)
 import Data.List.Types (List)
+import Node.Path (FilePath)
 import Options.Applicative
   ( (<**>)
   , Parser
@@ -91,7 +92,7 @@ tilesetOf ColonTileset = TS.colon
 
 data Input
   = StdinInput
-  | FilesInput (List String)
+  | FilesInput (Array FilePath)
 
 data Options = Options
   { version :: Boolean
