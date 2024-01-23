@@ -97,9 +97,9 @@ data Input
 data Options = Options
   { version :: Boolean
   , mode :: Mode
+  , tileset :: Tileset
   , delim :: String
   , gitLogFormat :: GitLogFormat
-  , tileset :: Tileset
   , args :: List String
   }
 
@@ -121,6 +121,15 @@ optionsSpec = ado
     , value DefaultMode
     ]
 
+  tileset <- option tileset_ $ fold
+    [ long "tileset"
+    , short 't'
+    , metavar "TILESET"
+    , help "Use TILESET (tree|colon) to print trees"
+    , showDefault
+    , value TreeTileset
+    ]
+
   delim <- strOption $ fold
     [ long "delimiter"
     , short 'd'
@@ -138,23 +147,14 @@ optionsSpec = ado
     , value OnelineGitLogFormat
     ]
 
-  tileset <- option tileset_ $ fold
-    [ long "tileset"
-    , short 't'
-    , metavar "TILESET"
-    , help "Use TILESET (tree|colon) to print trees"
-    , showDefault
-    , value TreeTileset
-    ]
-
   args <- many $ argument str $ metavar "FILES..."
 
   in
     Options
       { version
       , mode
+      , tileset
       , delim
       , gitLogFormat
-      , tileset
       , args
       }

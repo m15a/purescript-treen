@@ -5,6 +5,7 @@ import Data.Maybe (Maybe(..))
 import Data.String.Pattern (Pattern(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
+import Treen.Data.GitLog (GitLog(..))
 import Treen.Util.Data.Maybe (unwrapJust)
 
 import Treen.Data.Lineage
@@ -37,6 +38,13 @@ lineageSpec = describe "Treen.Data.Lineage" do
     let
       actual = fromString (Pattern ".") ""
       expected = Nothing
+    actual `shouldEqual` expected
+
+  it "can be made from oneline git log" do
+    let
+      actual = show $ unwrapJust $ fromGitLog $
+        GitLog { hash: "123abcd", type_: Just "test", scope: Just "lineage", bang: true, title: "test this" }
+      expected = "(Lineage test! → lineage → 123abcd test this)"
     actual `shouldEqual` expected
 
   it "compares lineages alphabetically then in depth" do

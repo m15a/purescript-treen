@@ -12,7 +12,7 @@ module Treen.Data.Lineage
   ( Lineage
   , fromFoldable
   , fromString
-  , fromOnelineGitLog
+  , fromGitLog
   , head
   , tail
   , toList
@@ -27,7 +27,7 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith, split)
 import Data.String.Pattern (Pattern)
 import Treen.Util.Data.List.NonEmpty (tailOfMoreThanOne) as L1
-import Treen.Data.GitLog.Oneline (OnelineGitLog(..))
+import Treen.Data.GitLog (GitLog(..))
 
 -- | A lineage.
 -- |
@@ -71,32 +71,32 @@ fromString sep = split sep >>> trimLastEmpty >>> fromFoldable
     if x == "" then A.init a
     else pure a
 
--- | Make a lineage from a Git oneline Git log.
+-- | Make a lineage from a Git log.
 -- |
 -- | Precedence of the attributes are
 -- |
 -- |     1. `type_` and optional `!`,
 -- |     2. `scope`, and finally
 -- |     3. `hash` and `title`.
-fromOnelineGitLog :: OnelineGitLog -> Maybe Lineage
-fromOnelineGitLog log = do
+fromGitLog :: GitLog -> Maybe Lineage
+fromGitLog log = do
   fromFoldable case log of
-    OnelineGitLog { hash, type_: Nothing, scope: Nothing, bang: _, title } ->
+    GitLog { hash, type_: Nothing, scope: Nothing, bang: _, title } ->
       [ "[no type]"
       , "[no scope]"
       , hash <> " " <> title
       ]
-    OnelineGitLog { hash, type_: Just type_', scope: Nothing, bang, title } ->
+    GitLog { hash, type_: Just type_', scope: Nothing, bang, title } ->
       [ type_' <> if bang then "!" else ""
       , "[no scope]"
       , hash <> " " <> title
       ]
-    OnelineGitLog { hash, type_: Just type_', scope: Just scope', bang, title } ->
+    GitLog { hash, type_: Just type_', scope: Just scope', bang, title } ->
       [ type_' <> if bang then "!" else ""
       , scope'
       , hash <> " " <> title
       ]
-    OnelineGitLog { hash, type_: Nothing, scope: Just scope', bang: _, title } ->
+    GitLog { hash, type_: Nothing, scope: Just scope', bang: _, title } ->
       [ "[no type]"
       , scope'
       , hash <> " " <> title

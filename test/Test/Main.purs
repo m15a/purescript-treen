@@ -7,7 +7,7 @@ import Effect.Aff (launchAff_)
 import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (runSpec)
 
-import Test.Treen.Data.GitLog.OnelineSpec (onelineGitLogSpec)
+import Test.Treen.Data.GitLogSpec (gitLogSpec)
 import Test.Treen.Data.TreenSpec (treenSpec)
 import Test.Treen.Data.LineageSpec (lineageSpec)
 import Test.Treen.Data.GroveSpec (groveSpec)
@@ -23,4 +23,4 @@ main = launchAff_ $ runSpec [ consoleReporter ] do
   lineageSpec
   groveSpec
   treenSpec
-  onelineGitLogSpec
+  gitLogSpec

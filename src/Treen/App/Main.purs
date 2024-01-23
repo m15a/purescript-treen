@@ -9,12 +9,11 @@ import Treen.App.Command
   ( Command(..)
   , runDefaultCommand
   , runVersionCommand
-  , runOnelineGitLogCommand
+  , runGitLogCommand
   )
 import Treen.App.Options
   ( Input(..)
   , Mode(..)
-  , GitLogFormat(..)
   , Options(..)
   , parserInfo
   )
@@ -31,13 +30,13 @@ parseOptions = do
       Options { args } -> FilesInput (A.fromFoldable args)
     command = case options of
       Options { version: true } -> VersionCommand
-      Options { mode: DefaultMode, delim, tileset } ->
-        DefaultCommand { input, delim, tileset }
-      Options { mode: GitLogMode, gitLogFormat: OnelineGitLogFormat, tileset } ->
-        OnelineGitLogCommand { input, tileset }
+      Options { mode: DefaultMode, tileset, delim } ->
+        DefaultCommand { input, tileset, delim }
+      Options { mode: GitLogMode, tileset, gitLogFormat } ->
+        GitLogCommand { input, tileset, gitLogFormat }
   pure command
 
 runCommand :: Command -> Effect Unit
 runCommand VersionCommand = runVersionCommand
 runCommand (DefaultCommand options) = runDefaultCommand options
-runCommand (OnelineGitLogCommand options) = runOnelineGitLogCommand options
+runCommand (GitLogCommand options) = runGitLogCommand options

@@ -1,7 +1,7 @@
 module Treen.App.Command
   ( Command(..)
   , runDefaultCommand
-  , runOnelineGitLogCommand
+  , runGitLogCommand
   , runVersionCommand
   ) where
 
@@ -16,10 +16,10 @@ import Node.Encoding (Encoding(..))
 import Node.FS.Aff (readTextFile)
 import Node.Process (stdin, stdout)
 import Node.Stream.Aff (readableToString, write)
-import Treen.App.Options (Input(..), Tileset, tilesetOf)
+import Treen.App.Options (Input(..), Tileset, GitLogFormat(..), tilesetOf)
 import Treen.App.Version (ersion) as V
-import Treen.Data.GitLog.Oneline as GLO
-import Treen.Data.Lineage (fromString, fromOnelineGitLog) as L
+import Treen.Data.GitLog (fromOnelineString) as GL
+import Treen.Data.Lineage (fromString, fromGitLog) as L
 import Treen.Data.Treen (Treen)
 import Treen.Data.Treen (bundle, printWith) as T
 import Treen.Util.Data.String (lines) as S
@@ -29,19 +29,20 @@ data Command
   = VersionCommand
   | DefaultCommand
       { input :: Input
-      , delim :: String
       , tileset :: Tileset
+      , delim :: String
       }
-  | OnelineGitLogCommand
+  | GitLogCommand
       { input :: Input
       , tileset :: Tileset
+      , gitLogFormat :: GitLogFormat
       }
 
 runVersionCommand :: Effect Unit
 runVersionCommand = info V.ersion
 
-runDefaultCommand :: { input :: Input, delim :: String, tileset :: Tileset } -> Effect Unit
-runDefaultCommand { input, delim, tileset } = launchAff_ do
+runDefaultCommand :: { input :: Input, tileset :: Tileset, delim :: String } -> Effect Unit
+runDefaultCommand { input, tileset, delim } = launchAff_ do
   lines <- readTextContents UTF8 input <#> A.concatMap S.lines
   let
     makeLineage = L.fromString (Pattern delim)
@@ -49,11 +50,11 @@ runDefaultCommand { input, delim, tileset } = launchAff_ do
     out = printTreenWith tileset treen
   write stdout =<< SA.fromString UTF8 (out <> "\n")
 
-runOnelineGitLogCommand :: { input :: Input, tileset :: Tileset } -> Effect Unit
-runOnelineGitLogCommand { input, tileset } = launchAff_ do
+runGitLogCommand :: { input :: Input, tileset :: Tileset, gitLogFormat :: GitLogFormat } -> Effect Unit
+runGitLogCommand { input, tileset, gitLogFormat: OnelineGitLogFormat } = launchAff_ do
   lines <- readTextContents UTF8 input <#> A.concatMap S.lines
   let
-    makeLineage = L.fromOnelineGitLog <=< GLO.fromString
+    makeLineage = L.fromGitLog <=< GL.fromOnelineString
     treen = T.bundle $ A.mapMaybe makeLineage lines
     out = printTreenWith tileset treen
   write stdout =<< SA.fromString UTF8 (out <> "\n")
