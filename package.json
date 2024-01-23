@@ -14,16 +14,12 @@
         "bin/treen"
     ],
     "scripts": {
+        "install:npm": "npm i -g purescript@latest spago@next esbuild@latest purs-tidy@latest",
+        "install:spago": "spago install",
         "build": "spago build",
-        "bundle": "spago bundle",
-        "format": "purs-tidy format-in-place src test",
         "check": "spago test",
-        "check:format": "purs-tidy check src test"
-    },
-    "devDependencies": {
-        "purescript": "^0.15.14",
-        "spago": "^0.93.24",
-        "esbuild": "^0.19.11",
-        "purescript-tidy": "^0.10.1"
+        "check:format": "purs-tidy check src test",
+        "format": "purs-tidy format-in-place src test",
+        "bundle": "spago bundle"
     }
 }
