@@ -36,7 +36,8 @@ esac
 
 sed -i -E spago.yaml -e "s|(version: )$CURRENT_VERSION|\1$NEXT_VERSION|"
 sed -i -E package.json -e "s|(\"version\": \")$CURRENT_VERSION(\")|\1$NEXT_VERSION\2|"
+sed -i -E package.nix -e "s|(version = \")$CURRENT_VERSION(\")|\1$NEXT_VERSION\2|"
 sed -i -E src/Treen/App/Version.purs -e "s|(ersion = \")$CURRENT_VERSION(\")|\1$NEXT_VERSION\2|"
 
-git add spago.yaml package.json src/Treen/App/Version.purs
+git add spago.yaml package.json package.nix src/Treen/App/Version.purs
 git commit -m "release: bump version $CURRENT_VERSION -> $NEXT_VERSION"
