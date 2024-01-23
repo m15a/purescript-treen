@@ -10,6 +10,7 @@ index.js
 bundle.js
 output/
 generated-docs/
+result
 
 # Development tools
 .direnv/
