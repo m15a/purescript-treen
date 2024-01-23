@@ -35,6 +35,8 @@ package:
     platform: node
     type: module
     module: *main
+    outfile: bundle.js
+    minify: true
   publish:
     version: 0.0.1
     license: MIT

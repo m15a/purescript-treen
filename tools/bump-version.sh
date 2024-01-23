@@ -17,25 +17,26 @@ for option in "$@"; do
     esac
 done
 
-CURRENT="$(spago run -- --version 2>/dev/null)"
-MAJOR="$(echo -n "$CURRENT" | cut -d. -f1)"
-MINOR="$(echo -n "$CURRENT" | cut -d. -f2)"
-BUGFIX="$(echo -n "$CURRENT" | cut -d. -f3)"
+CURRENT_VERSION="$(spago run -- --version 2>/dev/null)"
+CURRENT_MAJOR="$(echo -n "$CURRENT_VERSION" | cut -d. -f1)"
+CURRENT_MINOR="$(echo -n "$CURRENT_VERSION" | cut -d. -f2)"
+CURRENT_BUGFIX="$(echo -n "$CURRENT_VERSION" | cut -d. -f3)"
 
 case "$BUMP_STRATEGY" in
     major)
-        NEXT="$(("$MAJOR" + 1)).0.0"
+        NEXT_VERSION="$(("$CURRENT_MAJOR" + 1)).0.0"
         ;;
     minor)
-        NEXT="$MAJOR.$(("$MINOR" + 1)).0"
+        NEXT_VERSION="$CURRENT_MAJOR.$(("$CURRENT_MINOR" + 1)).0"
         ;;
     bugfix)
-        NEXT="$MAJOR.$MINOR.$(("$BUGFIX" + 1))"
+        NEXT_VERSION="$CURRENT_MAJOR.$CURRENT_MINOR.$(("$CURRENT_BUGFIX" + 1))"
         ;;
 esac
 
-sed -i -E spago.yaml -e "s|(version: )$CURRENT|\1$NEXT|"
-sed -i -E src/Treen/App/Version.purs -e "s|(ersion = \")$CURRENT(\")|\1$NEXT\2|"
+sed -i -E spago.yaml -e "s|(version: )$CURRENT_VERSION|\1$NEXT_VERSION|"
+sed -i -E package.json -e "s|(\"version\": \")$CURRENT_VERSION(\")|\1$NEXT_VERSION\2|"
+sed -i -E src/Treen/App/Version.purs -e "s|(ersion = \")$CURRENT_VERSION(\")|\1$NEXT_VERSION\2|"
 
-git add spago.yaml src/Treen/App/Version.purs
-git commit -m "release: bump version $CURRENT -> $NEXT"
+git add spago.yaml package.json src/Treen/App/Version.purs
+git commit -m "release: bump version $CURRENT_VERSION -> $NEXT_VERSION"
