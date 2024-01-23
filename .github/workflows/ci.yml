@@ -14,34 +14,26 @@ jobs:
         node: [ latest ]
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Cache NPM dependencies
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: Install NPM dependencies
-        run: npm run install:npm
-
-      - name: Cache PureScript dependencies
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
+        env:
+          cache-name: cache-spago-outputs
         with:
-          key: ${{ runner.os }}-spago-${{ hashFiles('**/spago.yaml') }}
           path: |
             .spago
             output
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/spago.yaml') }}
+
+      - name: Install Node dependencies
+        run: npm run install:npm
 
       - name: Install Purescript dependencies
         run: npm run install:spago
