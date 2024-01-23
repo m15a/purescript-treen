@@ -15,11 +15,11 @@
     ],
     "scripts": {
         "install:npm": "npm i -g purescript@latest spago@next esbuild@latest purs-tidy@latest purs-backend-es@latest",
-        "install:spago": "spago install",
-        "build": "spago build",
-        "check": "spago test",
+        "install:spago": "spago install --pure",
+        "build": "spago build --pure",
+        "check": "spago test --pure",
         "check:format": "purs-tidy check src test",
         "format": "purs-tidy format-in-place src test",
-        "bundle": "spago bundle"
+        "bundle": "spago bundle --pure"
     }
 }
