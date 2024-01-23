@@ -48,5 +48,5 @@ package:
       githubRepo: purescript-treen
 workspace:
   package_set:
-    registry: 48.4.0
+    registry: 48.5.0
   extra_packages: {}
