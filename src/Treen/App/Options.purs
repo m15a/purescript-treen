@@ -44,7 +44,7 @@ import Treen.Data.Tileset
 
 parserInfo :: ParserInfo Options
 parserInfo = info (optionsSpec <**> helper) $ fold
-  [ header "treen - print anything as tree-like format"
+  [ header "treen - print trees from anything"
   , fullDesc
   ]
 

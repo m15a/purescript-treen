@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "treen",
-    "description": "Print anything in a tree-like format.",
+    "description": "Print trees from anything.",
     "version": "0.0.1",
     "license": "MIT",
     "author": "NACAMURA Mitsuhiro <m15@m15a.dev>",

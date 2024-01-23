@@ -1,7 +1,7 @@
 package:
   name: treen
   description: |
-    Print anything in a tree-like format.
+    Print trees from anything.
   dependencies:
     - aff: ">=7.1.0 <8.0.0"
     - arrays: ">=7.3.0 <8.0.0"
