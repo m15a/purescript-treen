@@ -82,10 +82,13 @@ fromOnelineGitLog :: OnelineGitLog -> Maybe Lineage
 fromOnelineGitLog log = do
   fromFoldable case log of
     OnelineGitLog { hash, type_: Nothing, scope: Nothing, bang: _, title } ->
-      [ hash <> " " <> title
+      [ "[no type]"
+      , "[no scope]"
+      , hash <> " " <> title
       ]
     OnelineGitLog { hash, type_: Just type_', scope: Nothing, bang, title } ->
       [ type_' <> if bang then "!" else ""
+      , "[no scope]"
       , hash <> " " <> title
       ]
     OnelineGitLog { hash, type_: Just type_', scope: Just scope', bang, title } ->
@@ -94,7 +97,8 @@ fromOnelineGitLog log = do
       , hash <> " " <> title
       ]
     OnelineGitLog { hash, type_: Nothing, scope: Just scope', bang: _, title } ->
-      [ scope'
+      [ "[no type]"
+      , scope'
       , hash <> " " <> title
       ]
 
