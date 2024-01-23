@@ -41,7 +41,8 @@ data Command
 runVersionCommand :: Effect Unit
 runVersionCommand = info V.ersion
 
-runDefaultCommand :: { input :: Input, tileset :: Tileset, delim :: String } -> Effect Unit
+runDefaultCommand
+  :: { input :: Input, tileset :: Tileset, delim :: String } -> Effect Unit
 runDefaultCommand { input, tileset, delim } = launchAff_ do
   lines <- readTextContents UTF8 input <#> A.concatMap S.lines
   let
@@ -50,7 +51,8 @@ runDefaultCommand { input, tileset, delim } = launchAff_ do
     out = printTreenWith tileset treen
   write stdout =<< SA.fromString UTF8 (out <> "\n")
 
-runGitLogCommand :: { input :: Input, tileset :: Tileset, gitLogFormat :: GitLogFormat } -> Effect Unit
+runGitLogCommand
+  :: { input :: Input, tileset :: Tileset, gitLogFormat :: GitLogFormat } -> Effect Unit
 runGitLogCommand { input, tileset, gitLogFormat: OnelineGitLogFormat } = launchAff_ do
   lines <- readTextContents UTF8 input <#> A.concatMap S.lines
   let

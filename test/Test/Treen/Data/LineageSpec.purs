@@ -43,7 +43,13 @@ lineageSpec = describe "Treen.Data.Lineage" do
   it "can be made from oneline git log" do
     let
       actual = show $ unwrapJust $ fromGitLog $
-        GitLog { hash: "123abcd", type_: Just "test", scope: Just "lineage", bang: true, title: "test this" }
+        GitLog
+          { hash: "123abcd"
+          , type_: Just "test"
+          , scope: Just "lineage"
+          , bang: true
+          , title: "test this"
+          }
       expected = "(Lineage test! → lineage → 123abcd test this)"
     actual `shouldEqual` expected
 
