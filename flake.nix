@@ -17,22 +17,25 @@
 
   outputs = { self, nixpkgs, flake-utils, purs-overlay, mk-spago-deriv, ... }:
   let
-    overlay = import ./overlay.nix;
+    treen-overlay = import ./overlay.nix;
   in
-  flake-utils.lib.eachDefaultSystem (system:
+  {
+    overlays = rec {
+      treen = treen-overlay;
+      default = treen;
+    };
+  } // (flake-utils.lib.eachDefaultSystem (system:
   let
     pkgs = import nixpkgs {
       inherit system;
       overlays = [
         purs-overlay.overlays.default
         mk-spago-deriv.overlays.default
-        overlay
+        treen-overlay
       ];
     };
   in
   {
-    overlays.default = overlay;
-
     packages = rec {
       inherit (pkgs) treen;
       default = treen;
@@ -40,7 +43,7 @@
 
     apps = rec {
       treen = flake-utils.lib.mkApp {
-        drv = self.packages.treen;
+        drv = self.packages.${system}.treen;
         name = "treen";
       };
       default = treen;
@@ -56,5 +59,5 @@
         purs-tidy
       ];
     };
-  });
+  }));
 }
