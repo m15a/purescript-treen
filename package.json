@@ -5,7 +5,7 @@
     "version": "0.0.1",
     "license": "MIT",
     "author": "NACAMURA Mitsuhiro <m15@m15a.dev>",
-    "homepage": "https://github.com/m15a/purescript-treen/",
+    "homepage": "https://github.com/m15a/treen/",
     "type" : "module",
     "main": "treen",
     "bin": "bin/treen",
