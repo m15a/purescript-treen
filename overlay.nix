@@ -1,3 +1,3 @@
 final: prev: {
-  treen = final.callPackage ./package.nix {};
+  treen = final.callPackage ./package.nix { };
 }

@@ -1,0 +1,32 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: local
+    hooks:
+      - id: purs-tidy
+        name: Format PureScript files
+        entry: purs-tidy format-in-place
+        language: system
+        files: ^.*\.purs$
+      - id: statix
+        name: Lint Nix files
+        entry: statix check .
+        pass_filenames: false
+        language: system
+        files: ^.*\.nix$
+      - id: deadnix
+        name: Scan Nix files for dead code
+        entry: deadnix --fail --no-lambda-arg --no-lambda-pattern-names
+        language: system
+        files: ^.*\.nix$
+      - id: nixpkgs-fmt
+        name: Format Nix files
+        entry: nixpkgs-fmt
+        language: system
+        files: ^.*\.nix$
+      - id: vale
+        name: Lint Markdown files
+        entry: vale
+        language: system
+        types:
+          - markdown

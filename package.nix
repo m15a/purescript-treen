@@ -20,19 +20,19 @@ mkSpagoDerivation rec {
     nodejs
   ];
   buildPhase = ''
-  spago bundle --pure
+    spago bundle --pure
   '';
   doCheck = true;
   checkPhase = ''
-  spago test --pure
+    spago test --pure
   '';
   installPhase = ''
-  app_home=$out/share/${pname}-${version}
-  mkdir -p $out/bin $app_home/bin
-  for file in package.json bundle.js README.md LICENSE; do
-      install -m644 "$file" -t $app_home
-  done
-  install -m755 bin/treen -t $app_home/bin
-  ln -s $app_home/bin/treen $out/bin/treen
+    app_home=$out/share/${pname}-${version}
+    mkdir -p $out/bin $app_home/bin
+    for file in package.json bundle.js README.md LICENSE; do
+        install -m644 "$file" -t $app_home
+    done
+    install -m755 bin/treen -t $app_home/bin
+    ln -s $app_home/bin/treen $out/bin/treen
   '';
 }
