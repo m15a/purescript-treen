@@ -14,12 +14,11 @@
         "bin/treen"
     ],
     "scripts": {
-        "install:npm": "npm i -g purescript@latest spago@next esbuild@latest purs-tidy@latest purs-backend-es@latest",
+        "install:dev": "npm i -g purescript@latest spago@next esbuild@latest purs-backend-es@latest",
+        "install:npm": "npm install",
         "install:spago": "spago install --pure",
         "build": "spago build --pure",
         "check": "spago test --pure",
-        "check:format": "purs-tidy check src test",
-        "format": "purs-tidy format-in-place src test",
         "bundle": "spago bundle --pure"
     }
 }

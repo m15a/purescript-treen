@@ -32,10 +32,13 @@ jobs:
             output
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/spago.yaml') }}
 
-      - name: Install Node dependencies
+      - name: Install Node development dependencies
+        run: npm run install:dev
+
+      - name: Install Node package dependencies
         run: npm run install:npm
 
-      - name: Install Purescript dependencies
+      - name: Install Purescript package dependencies
         run: npm run install:spago
 
       - name: Build package
@@ -43,6 +46,3 @@ jobs:
 
       - name: Run tests
         run: npm run check
-
-      - name: Check formats
-        run: npm run check:format
