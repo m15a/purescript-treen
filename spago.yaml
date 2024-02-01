@@ -37,15 +37,6 @@ package:
     module: *main
     outfile: bundle.js
     minify: true
-  publish:
-    version: 0.0.1
-    license: MIT
-    include:
-      - "bin/treen"
-      - "test/**/*.purs"
-    location:
-      githubOwner: m15a
-      githubRepo: treen
 workspace:
   package_set:
     registry: 48.5.0
